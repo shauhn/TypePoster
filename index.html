@@ -1,0 +1,1874 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TypePoster</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="TypePoster">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="theme-color" content="#131313">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=League+Gothic&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fjalla+One&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@1&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital@1&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@1&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital@1&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Chango&family=Londrina+Solid:wght@900&family=Permanent+Marker&family=Lilita+One&display=swap">
+<style>
+  :root{
+    --bg:#131313; --panel:#1b1b1b; --line:#2a2a2a; --text:#ececec; --muted:#8d8d8d; --field:#232323; --accent:#f2f0eb;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--text);font-family:"Inter",sans-serif;font-size:14px;-webkit-font-smoothing:antialiased}
+  .app{display:flex;flex-direction:column;min-height:100vh}
+  .preview{position:sticky;top:0;z-index:5;background:var(--bg);padding:12px 12px 10px;display:flex;justify-content:center;border-bottom:1px solid var(--line)}
+  .stageWrap{width:100%;display:flex;justify-content:center}
+  .stage{position:relative;box-shadow:0 10px 40px rgba(0,0,0,.5)}
+  .stage canvas{display:block;width:100%;height:100%}
+  .safe{position:absolute;inset:0;pointer-events:none;display:none}
+  .safe.on{display:block}
+  .safe div{position:absolute;background:rgba(255,0,90,.22);outline:1px dashed rgba(255,60,120,.9)}
+  .safe span{position:absolute;font:600 10px "Inter",sans-serif;color:#fff;background:rgba(255,0,90,.85);padding:2px 5px;border-radius:3px;top:6px;left:6px}
+  .controls{padding:12px;max-width:560px;width:100%;margin:0 auto}
+  details{background:var(--panel);border:1px solid var(--line);border-radius:12px;margin-bottom:10px;overflow:hidden}
+  summary{list-style:none;cursor:pointer;padding:14px 16px;font-weight:600;letter-spacing:.02em;display:flex;justify-content:space-between;align-items:center}
+  summary::-webkit-details-marker{display:none}
+  summary::after{content:"+";color:var(--muted);font-weight:400;font-size:18px}
+  details[open] summary::after{content:"–"}
+  .body{padding:0 16px 16px}
+  label.f{display:block;color:var(--muted);font-size:12px;margin:12px 0 6px}
+  textarea,input[type=text],select{width:100%;background:var(--field);color:var(--text);border:1px solid var(--line);border-radius:8px;padding:10px 11px;font:inherit;font-size:16px}
+  textarea{min-height:150px;resize:vertical;line-height:1.35;text-transform:none}
+  input:disabled{opacity:.5}
+  .row{display:flex;gap:10px;align-items:center}
+  .row > *{flex:1}
+  .check{display:flex;align-items:center;gap:8px;margin-top:10px;color:var(--text);font-size:13px}
+  .check input{width:18px;height:18px;accent-color:var(--accent)}
+  .colors{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:6px}
+  .cpick{display:flex;flex-direction:column;gap:6px;font-size:12px;color:var(--muted)}
+  input[type=color]{width:100%;height:44px;border:1px solid var(--line);border-radius:8px;background:var(--field);padding:3px;cursor:pointer}
+  .presets{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:6px}
+  .preset{height:52px;border-radius:8px;border:1px solid var(--line);cursor:pointer;display:flex;align-items:center;justify-content:center;font:400 22px "Anton",sans-serif;letter-spacing:-.02em}
+  .preset small{font:italic 400 12px "Instrument Serif",serif;margin-left:3px}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--field);color:var(--text);border:1px solid var(--line);border-radius:8px;padding:11px 14px;font:500 14px "Inter",sans-serif;cursor:pointer;width:100%;margin-top:10px}
+  .btn.primary{background:var(--accent);color:#111;border-color:var(--accent);font-weight:600;padding:14px}
+  .seg{display:flex;background:var(--field);border:1px solid var(--line);border-radius:9px;padding:3px;gap:3px}
+  .seg button{flex:1;background:none;border:0;color:var(--muted);padding:9px 4px;border-radius:7px;font:500 12px "Inter",sans-serif;cursor:pointer;line-height:1.25}
+  .seg button.on{background:#3a3a3a;color:#fff}
+  .seg button b{display:block;font-weight:600;font-size:13px}
+  .range{margin-top:12px}
+  .range .lab{display:flex;justify-content:space-between;color:var(--muted);font-size:12px;margin-bottom:4px}
+  .range .lab output{color:var(--text);font-variant-numeric:tabular-nums}
+  input[type=range]{width:100%;accent-color:var(--accent)}
+  .note{color:var(--muted);font-size:12px;line-height:1.45;margin-top:10px}
+  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:#f2f0eb;color:#111;padding:10px 16px;border-radius:999px;font-weight:600;opacity:0;transition:.25s;z-index:50;pointer-events:none}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:40;display:none;flex-direction:column;align-items:center;justify-content:center;padding:20px;gap:14px}
+  .modal.show{display:flex}
+  .modal img{max-width:100%;max-height:70vh;box-shadow:0 10px 40px rgba(0,0,0,.6)}
+  .modal p{margin:0;color:#ddd;text-align:center;max-width:360px;line-height:1.45}
+  .modal .btn{max-width:240px}
+  .seg.wrap{flex-wrap:wrap}
+  .seg.wrap button{flex:1 1 30%}
+  .seg.kindSeg button{flex:1 1 45%}
+  .start{position:fixed;inset:0;z-index:60;background:rgba(10,10,10,.96);display:none;flex-direction:column;align-items:center;justify-content:center;padding:24px;gap:18px}
+  .start.show{display:flex}
+  .start h1{font:400 44px/0.95 "Anton",sans-serif;text-transform:uppercase;letter-spacing:-.01em;margin:0;text-align:center;color:#f2f0eb}
+  .start p{margin:0;color:var(--muted);font:italic 18px "Instrument Serif",serif}
+  .cards{display:grid;gap:12px;width:100%;max-width:420px}
+  .card{display:flex;align-items:center;gap:16px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px;color:var(--text);cursor:pointer;text-align:left;font:inherit}
+  .card:hover,.card:focus{border-color:#555;outline:none}
+  .card .ic{flex:none;width:52px;height:52px;display:flex;align-items:center;justify-content:center}
+  .card .ic i{display:block;border:2px solid #f2f0eb;border-radius:4px}
+  .card b{display:block;font-size:16px;font-weight:600;margin-bottom:2px}
+  .card span{color:var(--muted);font-size:12.5px}
+  .photoRow{display:flex;gap:8px}
+  .photoRow .btn{margin-top:0;width:auto;flex:1}
+  .photoStatus{min-height:1.45em}
+  .photoStatus.busy::before{content:"";display:inline-block;width:10px;height:10px;border:2px solid var(--muted);border-top-color:transparent;border-radius:50%;margin-right:7px;vertical-align:-1px;animation:spin .8s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .styles{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .styles button{background:var(--field);border:1px solid var(--line);border-radius:9px;padding:0;cursor:pointer;color:var(--muted);font:500 11px "Inter",sans-serif;overflow:hidden;display:flex;flex-direction:column}
+  .styles button i{display:block;height:46px;position:relative;overflow:hidden}
+  .styles button span{padding:6px 2px}
+  .styles button.on{border-color:#f2f0eb;color:#fff}
+  .disabledBlock{opacity:.45;pointer-events:none}
+  @media (min-width:900px){
+    .app{flex-direction:row;height:100vh;overflow:hidden}
+    .preview{position:relative;flex:1;align-items:center;border-bottom:0;border-right:1px solid var(--line);padding:24px}
+    .controls{width:400px;max-width:400px;flex:none;overflow-y:auto;padding:18px;margin:0}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="preview">
+    <div class="stageWrap" id="stageWrap">
+      <div class="stage" id="stage">
+        <canvas id="cv" width="1080" height="1350" aria-label="Poster preview"></canvas>
+        <div class="safe" id="safe"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <details open>
+      <summary>Designing for</summary>
+      <div class="body">
+        <div class="seg" id="purpose">
+          <button data-v="instagram"><b>Instagram</b>post or story</button>
+          <button data-v="iphone"><b>iPhone</b>wallpaper</button>
+          <button data-v="desktop"><b>Desktop</b>wallpaper</button>
+        </div>
+        <label class="f">Size</label>
+        <div class="seg wrap" id="size"></div>
+        <label class="check"><input type="checkbox" id="safeT"> <span id="safeLabel">Show crop / safe zones</span></label>
+      </div>
+    </details>
+
+    <details open>
+      <summary>Photo &amp; style</summary>
+      <div class="body">
+        <label class="f" style="margin-top:0">Style</label>
+        <div class="styles" id="style">
+          <button data-v="classic"><i style="background:#0b0b0b"><b style="position:absolute;inset:9px 10px;background:repeating-linear-gradient(#f2f0eb 0 6px,transparent 6px 10px)"></b></i><span>Classic</span></button>
+          <button data-v="stage"><i style="background:#2b8ee0"><b style="position:absolute;left:7px;bottom:7px;width:22px;height:22px;background:radial-gradient(circle,#fff 0 3px,transparent 3.5px) 0 0/8px 8px"></b><b style="position:absolute;right:9px;bottom:0;width:14px;height:30px;background:#ddd;border-radius:7px 7px 0 0"></b></i><span>Stage</span></button>
+          <button data-v="magazine"><i style="background:#f4c843"><b style="position:absolute;left:8px;right:8px;top:9px;height:12px;border:4px solid #111;border-bottom:0;border-radius:40px 40px 0 0"></b><b style="position:absolute;left:50%;top:21px;width:12px;height:12px;margin-left:-6px;background:#555;border-radius:50%"></b></i><span>Magazine</span></button>
+          <button data-v="portrait"><i style="background:#efeee9"><b style="position:absolute;left:8px;top:6px;width:32px;height:32px;border:4px dotted #1fa05a;border-radius:50%"></b><b style="position:absolute;right:7px;top:8px;width:6px;height:30px;background:#111"></b></i><span>Portrait</span></button>
+          <button data-v="showcard"><i style="background:#59dcf7"><b style="position:absolute;left:8px;right:8px;top:6px;height:7px;background:#d8232a"></b><b style="position:absolute;left:8px;right:8px;top:16px;height:13px;background:#111"></b><b style="position:absolute;left:8px;right:8px;bottom:5px;height:9px;border:2px solid #111"></b></i><span>Show card</span></button>
+          <button data-v="psych"><i style="background:#f39ac2"><b style="position:absolute;inset:4px;background:#f2482a"></b><b style="position:absolute;left:12px;right:12px;top:8px;height:26px;border:6px solid #8f80d8;border-bottom:0;border-radius:30px 30px 0 0"></b></i><span>Psychedelic</span></button>
+          <button data-v="sunburst"><i style="background:#c62a22"><b style="position:absolute;right:6px;top:2px;width:30px;height:30px;background:repeating-conic-gradient(#f2e4c4 0 4deg,transparent 4deg 18deg);border-radius:50%"></b><b style="position:absolute;left:7px;top:12px;width:34px;height:10px;background:#f2e4c4"></b><b style="position:absolute;left:7px;top:26px;width:22px;height:10px;background:#f2e4c4"></b></i><span>Sunburst</span></button>
+          <button data-v="gig"><i style="background:#efe5c3"><b style="position:absolute;left:7px;top:5px;width:26px;height:8px;background:#e3472c"></b><b style="position:absolute;left:7px;right:7px;bottom:4px;height:22px;background:#2b9ea8"></b><b style="position:absolute;left:50%;bottom:4px;width:14px;height:16px;margin-left:-7px;background:radial-gradient(circle,#e3472c 1.5px,transparent 2px) 0 0/4px 4px"></b></i><span>Gig poster</span></button>
+          <button data-v="festival"><i style="background:#f8d51a"><b style="position:absolute;left:10px;right:10px;top:8px;height:16px;border:5px solid #f04a23;border-bottom:0;border-radius:30px 30px 0 0"></b><b style="position:absolute;left:50%;bottom:0;width:20px;height:18px;margin-left:-10px;background:#333;border-radius:10px 10px 0 0"></b></i><span>Festival</span></button>
+          <button data-v="book"><i style="background:#c94c9e"><b style="position:absolute;left:14px;right:14px;top:5px;height:4px;background:#f3dcea;box-shadow:0 6px 0 #f3dcea,0 12px 0 #f3dcea"></b><b style="position:absolute;left:50%;bottom:-12px;width:34px;height:26px;margin-left:-17px;background:#5a1f47;border-radius:50% 50% 0 0"></b></i><span>Book cover</span></button>
+        </div>
+        <label class="f">Photo</label>
+        <div class="photoRow">
+          <button class="btn primary" id="photoPick" type="button">Upload a photo</button>
+          <button class="btn" id="photoClear" type="button">Remove photo</button>
+        </div>
+        <input type="file" id="photoIn" accept="image/*" hidden>
+        <p class="note photoStatus" id="photoStatus">Works best with one person. The background is removed right here on your device; the photo isn't uploaded anywhere.</p>
+        <div id="photoCtl">
+          <label class="check"><input type="checkbox" id="cutout"> Remove background</label>
+          <label class="f">Photo look</label>
+          <div class="seg" id="treat">
+            <button data-v="mono"><b>Mono</b>B&amp;W</button>
+            <button data-v="halftone"><b>Halftone</b>print</button>
+            <button data-v="duotone"><b>Duotone</b>tinted</button>
+            <button data-v="monotone"><b>Monotone</b>one ink</button>
+            <button data-v="color"><b>Color</b>original</button>
+          </div>
+          <div class="range"><div class="lab"><span>Photo size</span><output id="photoScaleO"></output></div>
+            <input type="range" id="photoScale" min="0.4" max="1.8" step="0.01"></div>
+          <div class="range"><div class="lab"><span>Left – right</span><output id="photoXO"></output></div>
+            <input type="range" id="photoX" min="-0.5" max="0.5" step="0.005"></div>
+          <div class="range"><div class="lab"><span>Up – down</span><output id="photoYO"></output></div>
+            <input type="range" id="photoY" min="-0.5" max="0.5" step="0.005"></div>
+          <div class="range"><div class="lab"><span>Edge softness</span><output id="edgeO"></output></div>
+            <input type="range" id="edge" min="0" max="1" step="0.01"></div>
+          <label class="check"><input type="checkbox" id="flip"> Flip photo</label>
+        </div>
+        <div id="sideWrap">
+          <label class="f" for="side">Side text: Portrait style (e.g. years)</label>
+          <textarea id="side" rows="2" style="min-height:64px" spellcheck="false"></textarea>
+        </div>
+      </div>
+    </details>
+
+    <details open>
+      <summary>Template &amp; text</summary>
+      <div class="body">
+        <div class="seg wrap kindSeg" id="kind">
+          <button data-v="poster"><b>Poster</b>big headline</button>
+          <button data-v="qotd"><b>Question</b>of the day</button>
+          <button data-v="poll"><b>Poll</b>options / results</button>
+          <button data-v="playlist"><b>Playlist</b>paste a tracklist</button>
+        </div>
+        <p class="note" id="kindNote" style="margin-top:6px">Question, Poll and Playlist use the Classic type layout. Your colors, fonts, grain and an optional photo behind the type still apply.</p>
+
+        <div id="grpPoster">
+          <button class="btn primary" id="pasteToday" type="button">Paste from TODAY.</button>
+          <p class="note" style="margin-top:6px">In your TODAY. archive, tap MAKE POSTER on a story, then tap this button. Or paste into the Headline box: the headline, caption and footer fill in by themselves.</p>
+          <label class="f" for="lines">Headline: one poster line per row</label>
+          <textarea id="lines" spellcheck="false"></textarea>
+          <label class="f" for="hero">Hero line (set extra large)</label>
+          <select id="hero"></select>
+        </div>
+
+        <div id="grpQotd">
+          <label class="f" for="qLabel">Label</label>
+          <input type="text" id="qLabel">
+          <label class="f" for="q">Question</label>
+          <textarea id="q" spellcheck="false" style="min-height:90px"></textarea>
+          <p class="note" style="margin-top:6px">Lines break automatically for the biggest type. Press return to break lines yourself.</p>
+        </div>
+
+        <div id="grpPoll">
+          <label class="f" for="pollLabel">Label</label>
+          <input type="text" id="pollLabel">
+          <label class="f" for="pollQ">Question</label>
+          <input type="text" id="pollQ">
+          <label class="f">Options (2–4)</label>
+          <div id="optList"></div>
+          <div class="row">
+            <button class="btn" id="optAdd" type="button">+ Add option</button>
+            <button class="btn" id="optDel" type="button">− Remove last</button>
+          </div>
+          <label class="f">Between options</label>
+          <div class="seg" id="sep">
+            <button data-v="or">“or”</button>
+            <button data-v="letters">A. B. C.</button>
+            <button data-v="none">Nothing</button>
+          </div>
+          <label class="check"><input type="checkbox" id="results"> Show results (percent bars)</label>
+          <p class="note" style="margin-top:6px">Post the options first, then turn on results for a follow-up post.</p>
+        </div>
+
+        <div id="grpPlaylist">
+          <label class="f" for="plText">Paste your tracklist</label>
+          <textarea id="plText" spellcheck="false" style="min-height:170px" placeholder="Sunday Drive&#10;1. Dreams — Fleetwood Mac  4:14&#10;2. Lovely Day — Bill Withers  4:15&#10;3. Ventura Highway — America  3:32"></textarea>
+          <button class="btn primary" id="plPaste" type="button">Paste from clipboard &amp; create poster</button>
+          <p class="note" style="margin-top:6px">One song per line, like “Song — Artist”. Dashes, “by”, tabs and | all work. Track numbers and times like 3:45 are tidied up, and the times add up to the total length. If the first line has no artist, it becomes the playlist name. Spotify “Copy link” gives only web addresses, so copy song names instead (Apple Music and most apps copy them as text).</p>
+          <label class="f" for="plTitle">Playlist name</label>
+          <input type="text" id="plTitle">
+          <label class="f" for="plLabel">Label</label>
+          <input type="text" id="plLabel">
+          <label class="f">Each line is</label>
+          <div class="seg" id="plOrder">
+            <button data-v="sa">Song — Artist</button>
+            <button data-v="as">Artist — Song</button>
+          </div>
+          <label class="check"><input type="checkbox" id="plNums"> Track numbers</label>
+          <label class="check"><input type="checkbox" id="plMeta"> Song count &amp; total length</label>
+          <p class="note" id="plStatus"></p>
+        </div>
+
+        <label class="check"><input type="checkbox" id="upper"> All caps</label>
+        <label class="f" for="caption">Caption</label>
+        <input type="text" id="caption">
+        <label class="f" for="sub">Sub-caption</label>
+        <input type="text" id="sub">
+        <label class="check"><input type="checkbox" id="autoSub"> Auto: name the fonts used</label>
+        <label class="f" for="footer">Footer</label>
+        <input type="text" id="footer">
+      </div>
+    </details>
+
+    <details>
+      <summary>Fonts</summary>
+      <div class="body">
+        <label class="f" for="head">Headline font</label>
+        <select id="head"></select>
+        <label class="f" for="cap">Caption font</label>
+        <select id="cap"></select>
+        <p class="note">All fonts are from Google Fonts.</p>
+      </div>
+    </details>
+
+    <details open>
+      <summary>Colors</summary>
+      <div class="body">
+        <div class="colors">
+          <label class="cpick">Background<input type="color" id="bg"></label>
+          <label class="cpick">Headline<input type="color" id="fg"></label>
+          <label class="cpick">Caption<input type="color" id="cc"></label>
+        </div>
+        <label class="f">Presets</label>
+        <div class="presets" id="presets"></div>
+        <button class="btn" id="swap">⇄ Swap background &amp; text</button>
+      </div>
+    </details>
+
+    <details>
+      <summary>Type &amp; texture</summary>
+      <div class="body">
+        <label class="f">Layout</label>
+        <div class="seg" id="layout">
+          <button data-v="uniform"><b>Stacked</b>same size + hero</button>
+          <button data-v="fill"><b>Fill width</b>every line full</button>
+        </div>
+        <label class="f">Alignment</label>
+        <div class="seg" id="align">
+          <button data-v="left">Left</button>
+          <button data-v="center">Center</button>
+          <button data-v="right">Right</button>
+        </div>
+        <div class="range"><div class="lab"><span>Letter-spacing</span><output id="trackO"></output></div>
+          <input type="range" id="track" min="-0.08" max="0.12" step="0.005"></div>
+        <div class="range"><div class="lab"><span>Line spacing</span><output id="gapO"></output></div>
+          <input type="range" id="gap" min="0" max="0.8" step="0.01"></div>
+        <div class="range"><div class="lab"><span>Hero size</span><output id="heroScaleO"></output></div>
+          <input type="range" id="heroScale" min="1" max="2.5" step="0.05"></div>
+        <label class="check"><input type="checkbox" id="grain"> Print grain</label>
+        <div class="range"><div class="lab"><span>Grain amount</span><output id="grainAmtO"></output></div>
+          <input type="range" id="grainAmt" min="0" max="1" step="0.01"></div>
+      </div>
+    </details>
+
+    <details open>
+      <summary id="exportTitle">Export</summary>
+      <div class="body">
+        <p class="note" id="sizeNote" style="margin-top:0"></p>
+        <button class="btn primary" id="dl">Download PNG</button>
+        <p class="note" id="exportNote"></p>
+        <button class="btn" id="reset">Reset to defaults</button>
+      </div>
+    </details>
+  </div>
+</div>
+
+<div class="start" id="start" role="dialog" aria-label="What are you designing for?">
+  <h1>What are you<br>designing for?</h1>
+  <p>Pick one. You can change it any time.</p>
+  <div class="cards">
+    <button class="card" data-v="instagram"><div class="ic"><i style="width:34px;height:42px"></i></div><div><b>Instagram</b><span>Portrait post, square post or story</span></div></button>
+    <button class="card" data-v="iphone"><div class="ic"><i style="width:24px;height:48px;border-radius:7px"></i></div><div><b>iPhone wallpaper</b><span>Lock and home screen, sized for your model</span></div></button>
+    <button class="card" data-v="desktop"><div class="ic"><i style="width:50px;height:30px"></i></div><div><b>Desktop wallpaper</b><span>Mac, PC, 4K and 5K displays</span></div></button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<div class="modal" id="modal">
+  <img id="modalImg" alt="Exported poster">
+  <p id="modalText"></p>
+  <button class="btn" id="modalClose">Close</button>
+</div>
+
+<script>
+const HEADS = {
+  "Anton":{w:400}, "Bebas Neue":{w:400}, "Oswald":{w:700}, "League Gothic":{w:400},
+  "Barlow Condensed":{w:800}, "Fjalla One":{w:400}, "Archivo Black":{w:400},
+  "Alfa Slab One":{w:400}, "Chango":{w:400}, "Londrina Solid":{w:900}, "Permanent Marker":{w:400}, "Lilita One":{w:400}
+};
+const CAPS = {
+  "Instrument Serif":{w:400}, "Playfair Display":{w:400}, "DM Serif Display":{w:400},
+  "Cormorant Garamond":{w:500}, "EB Garamond":{w:400}
+};
+const PRESETS = [
+  ["Black / White","#0b0b0b","#f2f0eb","#f2f0eb"],
+  ["Cream / Black","#efe8da","#111111","#111111"],
+  ["Red / Cream","#d6261e","#f6efe2","#f6efe2"],
+  ["Cobalt / White","#1f3fd1","#ffffff","#ffffff"],
+  ["Forest / Lime","#1d3b2a","#c8f25a","#e9f5d0"],
+  ["Pink / Maroon","#f6b7c8","#6b0f2a","#6b0f2a"],
+  ["Orange / Navy","#ff5a1f","#13213d","#13213d"],
+  ["Lavender / Charcoal","#cbbcf2","#26232b","#26232b"]
+];
+/* Each size: [label, width, height, margins {top,bottom,side} as fractions, safe zones] */
+const PURPOSES = {
+  instagram: {
+    label: "Instagram", dl: "Download for Instagram", def: "portrait",
+    note: "On your phone, saving opens the share sheet: choose “Save Image” and post it from Instagram, or share it straight to Instagram.",
+    fallback: "Press and hold the image to save it to Photos, then post it on Instagram.",
+    safeLabel: "Show Instagram crop / safe zones",
+    sizes: {
+      portrait: ["Portrait post", 1080, 1350],
+      square:   ["Square post", 1080, 1080],
+      story:    ["Story / Reel", 1080, 1920]
+    }
+  },
+  iphone: {
+    label: "iPhone wallpaper", dl: "Download iPhone wallpaper", def: "ip_pro",
+    note: "Save it to Photos, then go to Settings › Wallpaper › Add New Wallpaper › Photos. The headline sits below the lock-screen clock.",
+    fallback: "Press and hold the image to save it to Photos, then set it in Settings › Wallpaper.",
+    safeLabel: "Show lock-screen clock & controls",
+    sizes: {
+      ip_max:  ["Pro Max", 1320, 2868],
+      ip_pro:  ["Pro / 17", 1206, 2622],
+      ip_air:  ["Air", 1260, 2736],
+      ip_std:  ["15 / 16", 1179, 2556]
+    }
+  },
+  desktop: {
+    label: "Desktop wallpaper", dl: "Download desktop wallpaper", def: "d_mac",
+    note: "Mac: System Settings › Wallpaper › Add Photo. Windows: right-click the file › Set as desktop background.",
+    fallback: "Right-click (or press and hold) the image to save it, then set it as your desktop wallpaper.",
+    safeLabel: "Show menu bar & dock",
+    sizes: {
+      d_mac: ["MacBook 14″", 3024, 1964],
+      d_5k:  ["5K", 5120, 2880],
+      d_4k:  ["4K", 3840, 2160],
+      d_qhd: ["1440p", 2560, 1440],
+      d_hd:  ["1080p", 1920, 1080]
+    }
+  }
+};
+function sizeInfo(key){ for (const p in PURPOSES) if (PURPOSES[p].sizes[key]) return { purpose: p, label: PURPOSES[p].sizes[key][0], W: PURPOSES[p].sizes[key][1], H: PURPOSES[p].sizes[key][2] }; return sizeInfo("portrait"); }
+function dims(){ const i = sizeInfo(S.size); return [i.W, i.H]; }
+function margins(){
+  const i = sizeInfo(S.size), land = i.W > i.H;
+  if (i.purpose === "iphone")  return { top: 0.30, bottom: 0.13, side: 0.08 };
+  if (i.purpose === "desktop") return { top: 0.10, bottom: 0.13, side: 0.14 };
+  if (S.size === "story")      return { top: 0.14, bottom: 0.19, side: 0.075 };
+  return { top: 0.07, bottom: 0.055, side: land ? 0.1 : 0.075 };
+}
+const DEFAULT = {
+  lines:"MAKE\nSOMETHING\nLOUD\nEVERY\nSINGLE\nDAY", hero:2, upper:true,
+  caption:"Big type, small talk. Everything else is in the caption.",
+  sub:"", autoSub:true, footer:"No. 001 • @yourhandle • Nov. 14, 2026",
+  head:"Anton", cap:"Instrument Serif",
+  bg:"#0b0b0b", fg:"#f2f0eb", cc:"#f2f0eb",
+  layout:"uniform", align:"center", track:-0.02, gap:0.16, heroScale:1.6,
+  grain:true, grainAmt:0.55, purpose:"instagram", size:"portrait", safe:false, chosen:false,
+  style:"classic", treat:"mono", cutout:true, photoScale:1, photoX:0, photoY:0, edge:0.3, flip:false,
+  side:"1936\n2018",
+  kind:"poster",
+  qLabel:"Question of the day",
+  q:"What would you make if you knew no one would see it?",
+  qCaption:"Answer in the comments. Best one gets a shout-out tomorrow.",
+  pollLabel:"Poll",
+  pollQ:"What gets you through Monday?",
+  opts:["Coffee","Tea"], sep:"or", results:false, pcts:[62,38,0,0],
+  pollCaption:"Vote in the comments. Results tomorrow.",
+  plLabel:"Playlist", plTitle:"Sunday Drive", plOrder:"sa", plNums:true, plMeta:true,
+  plText:"1. Dreams — Fleetwood Mac  4:14\n2. Ventura Highway — America  3:32\n3. Lovely Day — Bill Withers  4:15\n4. Harvest Moon — Neil Young  5:03\n5. Sunday Morning — The Velvet Underground  2:56\n6. Midnight City — M83  4:03\n7. Golden Hour — Kacey Musgraves  3:18\n8. Pink + White — Frank Ocean  3:04",
+  plCaption:"Press play. Windows down."
+};
+/* each template keeps its own caption */
+function captionKey(){ return S.kind === "qotd" ? "qCaption" : S.kind === "poll" ? "pollCaption" : S.kind === "playlist" ? "plCaption" : "caption"; }
+/* builds a fresh state with its own copies of the poll arrays */
+function makeState(saved, keep){
+  const s = Object.assign({}, DEFAULT, saved || {}, keep || {});
+  s.opts = (Array.isArray(s.opts) && s.opts.length >= 2 ? s.opts : DEFAULT.opts).slice(0, 4);
+  s.pcts = (Array.isArray(s.pcts) ? s.pcts : DEFAULT.pcts).slice(0, 4);
+  while (s.pcts.length < 4) s.pcts.push(0);
+  if (!["poster", "qotd", "poll", "playlist"].includes(s.kind)) s.kind = "poster";
+  return s;
+}
+/* Picking a style sets its look; every color and font can still be changed after. */
+const STYLES = {
+  classic:  null,
+  stage:    { bg:"#2b8ee0", fg:"#111111", cc:"#ffffff", treat:"mono",     head:"Archivo Black", align:"left" },
+  magazine: { bg:"#f4c843", fg:"#111111", cc:"#111111", treat:"duotone",  head:"League Gothic", align:"center" },
+  portrait: { bg:"#efeee9", fg:"#1fa05a", cc:"#111111", treat:"halftone", head:"Archivo Black", align:"center" },
+  showcard: { bg:"#59dcf7", fg:"#111111", cc:"#d8232a", treat:"mono",     head:"Anton",          align:"center" },
+  psych:    { bg:"#f2482a", fg:"#8f80d8", cc:"#f39ac2", treat:"color",    head:"Chango",         align:"center" },
+  sunburst: { bg:"#c62a22", fg:"#f2e4c4", cc:"#f5d43a", treat:"color",    head:"Londrina Solid", align:"left" },
+  gig:      { bg:"#efe5c3", fg:"#e3472c", cc:"#2b9ea8", treat:"mono",     head:"Lilita One",     align:"left", upper:false },
+  festival: { bg:"#f8d51a", fg:"#f04a23", cc:"#111111", treat:"mono",     head:"Permanent Marker", align:"center" },
+  book:     { bg:"#c94c9e", fg:"#f3dcea", cc:"#f3dcea", treat:"monotone", head:"Oswald",         align:"center" }
+};
+const KEY = "type-poster-maker-v1";
+let S = makeState();
+try { const s = JSON.parse(localStorage.getItem(KEY) || "null"); if (s) S = makeState(s); } catch(e) {}
+function persist(){ try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e) {} }
+
+const $ = id => document.getElementById(id);
+const cv = $("cv"), ctx = cv.getContext("2d");
+
+function fontStr(fam, w, size, italic){ return `${italic ? "italic " : ""}${w} ${size}px "${fam}"`; }
+
+async function ensureFonts(){
+  const h = HEADS[S.head], c = CAPS[S.cap];
+  try {
+    await Promise.all([
+      document.fonts.load(fontStr(S.head, h.w, 100, false), "ABCHMOS0123"),
+      document.fonts.load(fontStr(S.cap, c.w, 30, true), "Abc xyz")
+    ]);
+  } catch(e) {}
+}
+
+/* ---------- grain ---------- */
+const noiseCache = {};
+function rng(seed){ return function(){ seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+function noiseLayer(w, h, density, seed){
+  const c = document.createElement("canvas"); c.width = w; c.height = h;
+  const x = c.getContext("2d"); const id = x.createImageData(w, h); const d = id.data; const r = rng(seed);
+  for (let i = 0; i < d.length; i += 4) {
+    if (r() < density) {
+      const v = r() < 0.5 ? 0 : 255;
+      d[i] = d[i+1] = d[i+2] = v;
+      d[i+3] = 20 + Math.pow(r(), 2) * 200;
+    }
+  }
+  x.putImageData(id, 0, 0); return c;
+}
+function getNoise(W, H){
+  const k = W + "x" + H;
+  if (!noiseCache[k]) {
+    /* grain is generated at about Instagram scale and stretched, so it looks the same at every export size */
+    const f = Math.min(1, 1200 / Math.min(W, H));
+    const fw = Math.round(W * f), fh = Math.round(H * f);
+    noiseCache[k] = { fine: noiseLayer(fw, fh, 0.22, 1337), coarse: noiseLayer(Math.round(fw/2.5), Math.round(fh/2.5), 0.12, 4242) };
+  }
+  return noiseCache[k];
+}
+
+/* ---------- text helpers ---------- */
+function trackedWidth(t, tr){ const n = [...t].length; return ctx.measureText(t).width + Math.max(0, n - 1) * tr; }
+function drawTracked(t, ax, y, tr, align){
+  ctx.textAlign = "left";
+  const w = trackedWidth(t, tr);
+  const x0 = align === "left" ? ax : align === "right" ? ax - w : ax - w / 2;
+  if (Math.abs(tr) < 0.01) { ctx.fillText(t, x0, y); return; }
+  const ch = [...t]; let pre = "";
+  for (let i = 0; i < ch.length; i++) {
+    ctx.fillText(ch[i], x0 + ctx.measureText(pre).width + i * tr, y);
+    pre += ch[i];
+  }
+}
+function wrap(text, maxW){
+  const words = text.split(/\s+/).filter(Boolean); const out = []; let line = "";
+  for (const w of words) {
+    const test = line ? line + " " + w : w;
+    if (ctx.measureText(test).width > maxW && line) { out.push(line); line = w; } else line = test;
+  }
+  if (line) out.push(line);
+  return out;
+}
+function subText(){ return S.autoSub ? `Set in ${S.head} & ${S.cap} Italic.` : S.sub; }
+function headLines(){
+  let l = S.lines.split("\n").map(s => s.trim()).filter(Boolean);
+  if (S.upper) l = l.map(s => s.toUpperCase());
+  return l;
+}
+
+/* ---------- render ---------- */
+async function render(){
+  const [W, H] = dims();
+  if (cv.width !== W || cv.height !== H) { cv.width = W; cv.height = H; fitStage(); }
+  await ensureFonts();
+  const m = margins();
+  const u = Math.min(W, H);
+  const side = W * m.side;
+  const top = H * m.top;
+  const bottomPad = H * m.bottom;
+  const availW = W - side * 2;
+  const ax = S.align === "left" ? side : S.align === "right" ? W - side : W / 2;
+  const hf = HEADS[S.head], cf = CAPS[S.cap];
+
+  if (P.needCut) { P.needCut = false; makeCut(); }
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = S.bg; ctx.fillRect(0, 0, W, H);
+  ctx.textBaseline = "alphabetic";
+  const styled = { stage: renderStage, magazine: renderMagazine, portrait: renderPortrait, showcard: renderShowcard,
+    psych: renderPsych, sunburst: renderSunburst, gig: renderGig, festival: renderFestival, book: renderBook }[S.style];
+  /* question and poll templates always use the classic type layout */
+  if (styled && S.kind === "poster") { styled(W, H, u, m); applyGrain(W, H); return; }
+  /* classic: an optional cut-out photo sits behind the type */
+  drawPhoto(W, H, { cx: W / 2, bottom: H, h: H * 0.66, maxW: W * 0.9 });
+
+  /* bottom text block, laid out bottom-up */
+  const draws = []; let cur = H - bottomPad; let textTop = null;
+  const place = (text, size, lh, wrapIt) => {
+    ctx.font = fontStr(S.cap, cf.w, size, true);
+    let ls = wrapIt ? wrap(text, availW) : [text];
+    if (!wrapIt) { const w = ctx.measureText(text).width; if (w > availW) size = size * availW / w; }
+    for (let i = ls.length - 1; i >= 0; i--) {
+      draws.push({ t: ls[i], size, y: cur });
+      textTop = cur - size * 0.75;
+      if (i > 0) cur -= size * lh;
+    }
+  };
+  const footer = S.footer.trim(), sub = subText().trim(), cap = (S[captionKey()] || "").trim();
+  const fs = u * 0.017, ss = u * 0.02, cs = u * 0.032;
+  if (footer) { place(footer, fs, 1.2, false); cur = textTop - u * 0.055; }
+  if (sub) { place(sub, ss, 1.3, true); cur = textTop - cs * 0.42; }
+  if (cap) { place(cap, cs, 1.18, true); }
+  const headBottom = textTop === null ? H - bottomPad : textTop - u * 0.06;
+
+  ctx.fillStyle = S.cc;
+  for (const d of draws) {
+    ctx.font = fontStr(S.cap, cf.w, d.size, true);
+    ctx.textAlign = S.align; ctx.fillText(d.t, ax, d.y);
+  }
+
+  /* main area: poster headline, question of the day, or poll */
+  const G = { W, H, u, ax, availW, hf, cf };
+  if (S.kind === "qotd") renderQotd(G, top, headBottom);
+  else if (S.kind === "poll") renderPoll(G, top, headBottom);
+  else if (S.kind === "playlist") renderPlaylist(G, top, headBottom);
+  else {
+    const lines = headLines();
+    if (lines.length) {
+      const availH = Math.max(50, headBottom - top);
+      const st = layoutStack(G, lines, availH, { hero: S.hero, layout: S.layout });
+      drawStack(G, st, top + (availH - st.total) / 2);
+    }
+  }
+
+  applyGrain(W, H);
+}
+
+/* ---------- shared stacking engine ---------- */
+function capH100(){ ctx.font = fontStr(S.head, HEADS[S.head].w, 100, false); return ctx.measureText("H").actualBoundingBoxAscent || 72; }
+/* Sizes a stack of lines to fit width and height. gapPx (optional) is a fixed gap between lines. */
+function layoutStack(G, lines, availH, o){
+  o = o || {};
+  const ch = capH100();
+  ctx.font = fontStr(S.head, G.hf.w, 100, false);
+  const w100 = lines.map(l => trackedWidth(l, S.track * 100));
+  const fitS = w100.map(w => w > 0 ? 100 * G.availW / w : 100);
+  const heroIdx = (o.hero != null && o.hero >= 0 && o.hero < lines.length) ? o.hero : -1;
+  let sizes;
+  if (o.layout === "fill") sizes = fitS.slice();
+  else {
+    const others = fitS.filter((_, i) => i !== heroIdx);
+    const base = others.length ? Math.min(...others) : fitS[0] / S.heroScale;
+    sizes = fitS.map((f, i) => i === heroIdx ? Math.min(base * S.heroScale, f) : base);
+  }
+  const maxCap = o.maxCap != null ? o.maxCap : availH * 0.55;
+  sizes = sizes.map(s => Math.min(s, maxCap / ch * 100));
+  const capHs = sizes.map(s => ch * s / 100);
+  const gap = o.gapPx != null ? o.gapPx : S.gap * Math.min(...capHs);
+  const total = capHs.reduce((a, b) => a + b, 0) + gap * (lines.length - 1);
+  const k = total > availH ? availH / total : 1;
+  return { lines, sizes: sizes.map(s => s * k), capHs: capHs.map(c => c * k), gap: gap * k, total: total * k };
+}
+/* Draws a laid-out stack from a top y. Returns each line's position. */
+function drawStack(G, st, y, color){
+  const pos = [];
+  st.lines.forEach((l, i) => {
+    const s = st.sizes[i];
+    ctx.font = fontStr(S.head, G.hf.w, s, false); ctx.fillStyle = color || S.fg;
+    const top = y;
+    y += st.capHs[i];
+    drawTracked(l, G.ax, y, S.track * s, S.align);
+    pos.push({ top, base: y, size: s, w: trackedWidth(l, S.track * s) });
+    y += st.gap;
+  });
+  return pos;
+}
+/* Splits text into the number of lines that gives the biggest type for the space. Manual line breaks win. */
+function autoBreak(G, text, availH, maxLines){
+  const t = S.upper ? text.toUpperCase() : text;
+  if (t.includes("\n")) return t.split("\n").map(s => s.trim()).filter(Boolean);
+  const words = t.split(/\s+/).filter(Boolean);
+  if (!words.length) return [];
+  const ch = capH100(); ctx.font = fontStr(S.head, G.hf.w, 100, false);
+  const W100 = s => trackedWidth(s, S.track * 100);
+  const spaceW = W100("A A") - W100("AA");
+  const ww = words.map(W100);
+  const totalW = ww.reduce((a, b) => a + b, 0) + spaceW * (words.length - 1);
+  let best = [t], bestS = 0;
+  for (let n = 1; n <= Math.min(words.length, maxLines || 7); n++) {
+    const target = totalW / n; const lines = []; let cur = [], curW = 0;
+    words.forEach((w, i) => {
+      const add = (cur.length ? spaceW : 0) + ww[i];
+      if (cur.length && curW + add / 2 > target && lines.length < n - 1) { lines.push(cur.join(" ")); cur = [w]; curW = ww[i]; }
+      else { cur.push(w); curW += add; }
+    });
+    if (cur.length) lines.push(cur.join(" "));
+    const sW = 100 * G.availW / Math.max(...lines.map(W100));
+    const sH = 100 * availH / (lines.length * ch + (lines.length - 1) * S.gap * ch);
+    const s = Math.min(sW, sH);
+    if (s > bestS * 1.04) { bestS = s; best = lines; }
+  }
+  return best;
+}
+/* small tracked label above a question or poll */
+function drawEyebrow(G, text, y){
+  const s = G.u * 0.03;
+  const capH = capH100() * s / 100;
+  ctx.font = fontStr(S.head, G.hf.w, s, false); ctx.fillStyle = S.fg;
+  drawTracked(text.toUpperCase(), G.ax, y + capH, s * 0.14, S.align);
+  return capH;
+}
+
+/* ---------- template: question of the day ---------- */
+function renderQotd(G, top, bottom){
+  let y = top;
+  if (S.qLabel.trim()) y += drawEyebrow(G, S.qLabel, y) + G.u * 0.06;
+  const availH = Math.max(50, bottom - y);
+  const lines = autoBreak(G, S.q, availH, 7);
+  if (!lines.length) return;
+  const st = layoutStack(G, lines, availH, { layout: "uniform" });
+  drawStack(G, st, y + (availH - st.total) / 2);
+}
+
+/* ---------- template: playlist ---------- */
+/* Turns pasted text into { title, tracks: [{song, artist}], seconds, links } */
+function parsePlaylist(text, order){
+  const raw = String(text || "").replace(/\r/g, "").split("\n").map(l => l.trim()).filter(Boolean);
+  const out = { title: null, tracks: [], seconds: 0, links: 0 };
+  const SEP = /\t+|\s+[—–-]\s+|\s+\|\s+|\s+·\s+|\s+by\s+/i;
+  const rows = [];
+  for (let l of raw) {
+    if (/^https?:\/\//i.test(l)) { out.links++; continue; }
+    if (/^(#|title|song|track|name)\b.*\b(artist|by)\b/i.test(l)) continue;   /* header rows */
+    l = l.replace(/^\s*\d{1,3}\s*[.):\-–—]?\s+/, "");                            /* track numbers */
+    let secs = 0;
+    l = l.replace(/[\s\t]*[(\[]?(\d{1,2}):(\d{2})(?::(\d{2}))?[)\]]?\s*$/, (m, a, b, c) => {
+      secs = c !== undefined ? (+a * 3600 + +b * 60 + +c) : (+a * 60 + +b); return "";
+    });
+    l = l.replace(/\s+$/, "");
+    if (!l) continue;
+    const parts = l.split(SEP).map(x => x.trim()).filter(Boolean);
+    rows.push({ parts, secs });
+  }
+  /* a first line with no artist, followed by lines that have one, is the playlist name */
+  if (rows.length > 1 && rows[0].parts.length === 1 && rows[0].secs === 0 && rows.slice(1).some(r => r.parts.length > 1)) {
+    out.title = rows.shift().parts[0];
+  }
+  for (const r of rows) {
+    let song = r.parts[0], artist = r.parts[1] || "";
+    if (order === "as" && r.parts.length > 1) { artist = r.parts[0]; song = r.parts[1]; }
+    out.tracks.push({ song, artist }); out.seconds += r.secs;
+  }
+  return out;
+}
+function fmtLength(sec){
+  const m = Math.round(sec / 60);
+  if (m < 60) return `${m} min`;
+  return `${Math.floor(m / 60)} hr ${m % 60} min`;
+}
+function renderPlaylist(G, top, bottom){
+  const pl = parsePlaylist(S.plText, S.plOrder);
+  const cf = G.cf, u = G.u;
+  let y = top;
+  if (S.plLabel.trim()) y += drawEyebrow(G, S.plLabel, y) + u * 0.045;
+  const area = Math.max(80, bottom - y);
+  /* name: up to ~26% of the area */
+  if (S.plTitle.trim()) {
+    const tArea = area * 0.26;
+    const tst = layoutStack(G, autoBreak(G, S.plTitle, tArea, 3), tArea, { layout: "uniform", maxCap: u * 0.13 });
+    drawStack(G, tst, y);
+    y += tst.total;
+  }
+  /* song count and total length, small and italic */
+  const n = pl.tracks.length;
+  if (S.plMeta && n) {
+    const ms = u * 0.03;
+    ctx.font = fontStr(S.cap, cf.w, ms, true); ctx.fillStyle = S.cc; ctx.textAlign = S.align;
+    const meta = `${n} song${n === 1 ? "" : "s"}${pl.seconds ? ", " + fmtLength(pl.seconds) : ""}`;
+    y += ms * 1.5; ctx.fillText(meta, G.ax, y);
+  }
+  y += u * 0.06;
+  if (!n) return;
+
+  /* tracks: number + SONG + artist on one baseline, all scaled together */
+  const MAX = 20;
+  const shown = pl.tracks.slice(0, MAX);
+  const more = n - shown.length;
+  const tracks = shown.map((t, i) => ({ num: String(i + 1).padStart(2, "0"), song: S.upper ? t.song.toUpperCase() : t.song, artist: t.artist }));
+  const rowsH = Math.max(40, bottom - y - (more ? u * 0.05 : 0));
+  const ch = capH100();
+  const NUM = 0.5, ART = 0.62, GAPX = 0.32;   /* sizes relative to the song size */
+  const rowW100 = t => {
+    let w = 0;
+    ctx.font = fontStr(S.head, G.hf.w, 100, false); w += trackedWidth(t.song, S.track * 100);
+    if (S.plNums) { ctx.font = fontStr(S.head, G.hf.w, 100 * NUM, false); w += trackedWidth(t.num, 100 * NUM * 0.08) + 100 * GAPX; }
+    if (t.artist) { ctx.font = fontStr(S.cap, cf.w, 100 * ART, true); w += ctx.measureText(t.artist).width + 100 * GAPX; }
+    return w;
+  };
+  const maxW100 = Math.max(...tracks.map(rowW100));
+  const rowGap = 0.22 + S.gap;   /* in cap heights */
+  const sW = 100 * G.availW / maxW100;
+  const sH = 100 * rowsH / (ch * (tracks.length + rowGap * (tracks.length - 1)));
+  const s = Math.min(sW, sH, u * 0.11);
+  const capH = ch * s / 100, pitch = capH * (1 + rowGap);
+  const blockH = capH * tracks.length + capH * rowGap * (tracks.length - 1);
+  let base = y + Math.max(0, (rowsH - blockH) / 2) + capH;
+  for (const t of tracks) {
+    const w = rowW100(t) * s / 100;
+    let x = S.align === "left" ? G.ax : S.align === "right" ? G.ax - w : G.ax - w / 2;
+    if (S.plNums) {
+      const ns = s * NUM;
+      ctx.font = fontStr(S.head, G.hf.w, ns, false); ctx.fillStyle = S.cc;
+      drawTracked(t.num, x, base, ns * 0.08, "left");
+      x += trackedWidth(t.num, ns * 0.08) + s * GAPX;
+    }
+    ctx.font = fontStr(S.head, G.hf.w, s, false); ctx.fillStyle = S.fg;
+    drawTracked(t.song, x, base, S.track * s, "left");
+    x += trackedWidth(t.song, S.track * s) + s * GAPX;
+    if (t.artist) {
+      ctx.font = fontStr(S.cap, cf.w, s * ART, true); ctx.fillStyle = S.cc; ctx.textAlign = "left";
+      ctx.fillText(t.artist, x, base);
+    }
+    base += pitch;
+  }
+  if (more) {
+    ctx.font = fontStr(S.cap, cf.w, u * 0.03, true); ctx.fillStyle = S.cc; ctx.textAlign = S.align;
+    ctx.fillText(`+ ${more} more`, G.ax, base - pitch + capH * 0.2 + u * 0.05);
+  }
+}
+
+/* ---------- template: poll ---------- */
+function pollOpts(){ return S.opts.map(o => String(o).trim()).filter(Boolean).map(o => S.upper ? o.toUpperCase() : o); }
+function renderPoll(G, top, bottom){
+  let y = top;
+  if (S.pollLabel.trim()) y += drawEyebrow(G, S.pollLabel, y) + G.u * 0.045;
+  const area = Math.max(80, bottom - y);
+  /* question: up to ~28% of the area, kept smaller than the options */
+  let qH = 0;
+  if (S.pollQ.trim()) {
+    const qArea = area * 0.28;
+    const qst = layoutStack(G, autoBreak(G, S.pollQ, qArea, 4), qArea, { layout: "uniform", maxCap: G.u * 0.075 });
+    drawStack(G, qst, y);
+    qH = qst.total + G.u * 0.07;
+  }
+  const opts = pollOpts();
+  if (!opts.length) return;
+  const oTop = y + qH, oH = Math.max(50, bottom - oTop);
+  const results = S.results, cf = G.cf;
+  const sepSize = G.u * 0.045, barH = G.u * 0.014, pctSize = G.u * 0.034;
+  const gapPx = results ? barH + pctSize * 2.1 : (S.sep === "or" ? sepSize * 1.5 : G.u * 0.035);
+  const lines = opts.map((o, i) => S.sep === "letters" ? `${String.fromCharCode(65 + i)}. ${o}` : o);
+  /* in results mode, keep room under the last option for its bar and percentage */
+  const st = layoutStack(G, lines, results ? oH - gapPx : oH, { layout: "uniform", gapPx, maxCap: oH * 0.42 });
+  const block = st.total + (results ? st.gap : 0);
+  const pos = drawStack(G, st, oTop + (oH - block) / 2);
+  if (results) {
+    const pcts = opts.map((_, i) => Math.max(0, Math.min(100, +S.pcts[i] || 0)));
+    const lead = Math.max(...pcts);
+    pos.forEach((p, i) => {
+      const bw = Math.min(G.availW, Math.max(p.w, G.availW * 0.55));
+      const bx = S.align === "left" ? G.ax : S.align === "right" ? G.ax - bw : G.ax - bw / 2;
+      const by = p.base + st.gap * 0.28;
+      ctx.save();
+      ctx.fillStyle = S.fg;
+      ctx.globalAlpha = 0.28; ctx.fillRect(bx, by, bw, barH);
+      ctx.globalAlpha = 1; ctx.fillRect(bx, by, bw * pcts[i] / 100, barH);
+      ctx.restore();
+      ctx.font = fontStr(S.cap, cf.w, pctSize, true); ctx.fillStyle = S.cc;
+      ctx.textAlign = S.align;
+      const tx = S.align === "left" ? bx : S.align === "right" ? bx + bw : G.ax;
+      ctx.fillText(`${Math.round(pcts[i])}%${pcts[i] === lead && lead > 0 ? " — winner" : ""}`, tx, by + barH + pctSize * 1.15);
+    });
+  } else if (S.sep === "or") {
+    ctx.font = fontStr(S.cap, cf.w, sepSize, true); ctx.fillStyle = S.cc; ctx.textAlign = S.align;
+    for (let i = 0; i < pos.length - 1; i++) ctx.fillText("or", G.ax, (pos[i].base + pos[i + 1].top) / 2 + sepSize * 0.3);
+  }
+}
+function applyGrain(W, H){
+  if (S.grain && S.grainAmt > 0) {
+    const n = getNoise(W, H);
+    ctx.save();
+    ctx.globalAlpha = S.grainAmt * 0.75; ctx.imageSmoothingEnabled = false; ctx.drawImage(n.fine, 0, 0, W, H);
+    ctx.globalAlpha = S.grainAmt * 0.6; ctx.imageSmoothingEnabled = true; ctx.drawImage(n.coarse, 0, 0, W, H);
+    ctx.restore();
+  }
+}
+
+/* ================= PHOTO: upload, background removal, looks ================= */
+const P = { orig: null, conf: null, cut: null, ver: 0, tKey: "", tCanvas: null, needCut: false, busy: false };
+const clamp255 = v => v < 0 ? 0 : v > 255 ? 255 : v;
+function hexRGB(h){ h = h.replace("#", ""); if (h.length === 3) h = h.split("").map(c => c + c).join(""); const n = parseInt(h, 16); return [n >> 16 & 255, n >> 8 & 255, n & 255]; }
+function mixRGB(a, b, t){ return a.map((v, i) => Math.round(v + (b[i] - v) * t)); }
+function newCanvas(w, h){ const c = document.createElement("canvas"); c.width = w; c.height = h; return c; }
+function setStatus(msg, busy){ const el = $("photoStatus"); el.textContent = msg; el.classList.toggle("busy", !!busy); }
+
+/* MediaPipe Selfie Segmentation, served from this page's own files (mediapipe/…). Runs on the device. */
+let segPromise = null;
+function loadScript(src){ return new Promise((res, rej) => { const el = document.createElement("script"); el.src = src; el.onload = res; el.onerror = () => rej(new Error("Couldn't load " + src)); document.head.appendChild(el); }); }
+function getSegmenter(){
+  if (!segPromise) {
+    segPromise = (async () => {
+      if (!window.SelfieSegmentation) await loadScript("mediapipe/selfie_segmentation.js");
+      /* model files are stored with a .txt suffix so the page host will serve them */
+      const seg = new window.SelfieSegmentation({ locateFile: f => "mediapipe/" + f + (/\.(tflite|binarypb|data)$/.test(f) ? ".txt" : "") });
+      seg.setOptions({ modelSelection: 0, selfieMode: false });
+      await seg.initialize();
+      return seg;
+    })();
+    segPromise.catch(() => { segPromise = null; });
+  }
+  return segPromise;
+}
+async function segment(src){
+  const seg = await getSegmenter();
+  /* the model works at 256 px; give it a padded square so tall photos keep their detail */
+  return await new Promise((resolve, reject) => {
+    const timer = setTimeout(() => reject(new Error("timeout")), 45000);
+    seg.onResults(r => {
+      clearTimeout(timer);
+      try {
+        const w = src.width, h = src.height;
+        const mc = newCanvas(w, h), mx = mc.getContext("2d");
+        mx.imageSmoothingEnabled = true; mx.imageSmoothingQuality = "high";
+        mx.drawImage(r.segmentationMask, 0, 0, w, h);
+        const d = mx.getImageData(0, 0, w, h).data;
+        /* the mask's confidence is in its alpha channel on some devices and in red on others */
+        let aMin = 255, aMax = 0;
+        for (let i = 3; i < d.length; i += 16) { const a = d[i]; if (a < aMin) aMin = a; if (a > aMax) aMax = a; }
+        const useAlpha = aMax - aMin > 40, conf = new Uint8ClampedArray(w * h);
+        for (let p = 0, i = 0; p < conf.length; p++, i += 4) conf[p] = useAlpha ? d[i + 3] : d[i];
+        resolve(conf);
+      } catch(e) { reject(e); }
+    });
+    seg.send({ image: src }).catch(e => { clearTimeout(timer); reject(e); });
+  });
+}
+/* turn confidence into a clean cut-out, then crop to the person */
+function makeCut(){
+  P.ver++; P.tKey = "";
+  if (!P.orig) { P.cut = null; return; }
+  if (!S.cutout || !P.conf) { P.cut = null; return; }
+  const w = P.orig.width, h = P.orig.height;
+  const c = newCanvas(w, h), x = c.getContext("2d"); x.drawImage(P.orig, 0, 0);
+  const id = x.getImageData(0, 0, w, h), d = id.data;
+  const half = 0.03 + 0.32 * S.edge, lo = (0.55 - half) * 255, hi = (0.55 + half) * 255;
+  let minX = w, minY = h, maxX = -1, maxY = -1;
+  for (let p = 0, i = 0; p < P.conf.length; p++, i += 4) {
+    let t = (P.conf[p] - lo) / (hi - lo); t = t < 0 ? 0 : t > 1 ? 1 : t; t = t * t * (3 - 2 * t);
+    const a = Math.round(d[i + 3] * t); d[i + 3] = a;
+    if (a > 24) { const px = p % w, py = (p / w) | 0; if (px < minX) minX = px; if (px > maxX) maxX = px; if (py < minY) minY = py; if (py > maxY) maxY = py; }
+  }
+  if (maxX < 0) { P.cut = null; return; }
+  x.putImageData(id, 0, 0);
+  const pad = Math.round(Math.max(w, h) * 0.01);
+  minX = Math.max(0, minX - pad); minY = Math.max(0, minY - pad); maxX = Math.min(w - 1, maxX + pad); maxY = Math.min(h - 1, maxY + pad);
+  const cw = maxX - minX + 1, ch = maxY - minY + 1;
+  const out = newCanvas(cw, ch); out.getContext("2d").drawImage(c, minX, minY, cw, ch, 0, 0, cw, ch);
+  P.cut = out;
+}
+const BAYER = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];
+/* the photo with its look applied (mono, halftone, duotone or color), cached */
+function treatedPhoto(){
+  const src = P.cut || P.orig; if (!src) return null;
+  const key = [P.ver, S.treat, S.fg, S.bg, S.cc, S.style].join("|");
+  if (P.tKey === key && P.tCanvas) return P.tCanvas;
+  const w = src.width, h = src.height, c = newCanvas(w, h), x = c.getContext("2d");
+  x.drawImage(src, 0, 0);
+  if (S.treat !== "color") {
+    const id = x.getImageData(0, 0, w, h), d = id.data;
+    const bgc = hexRGB(S.bg);
+    const ink = S.treat === "duotone" ? mixRGB(hexRGB(S.fg), [0, 0, 0], 0.15) : S.treat === "monotone" ? mixRGB(bgc, [0, 0, 0], 0.72) : [17, 17, 17];
+    const paper = S.treat === "duotone" ? mixRGB(bgc, [255, 255, 255], 0.38) : S.treat === "monotone" ? mixRGB(bgc, [255, 255, 255], 0.06) : [246, 245, 240];
+    const cell = Math.max(2, Math.round(Math.max(w, h) / 480));
+    for (let p = 0, i = 0; i < d.length; p++, i += 4) {
+      if (d[i + 3] === 0) continue;
+      let v = 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2];
+      if (S.treat === "mono") { v = clamp255((v - 128) * 1.4 + 140); d[i] = d[i + 1] = d[i + 2] = v; continue; }
+      v = clamp255((v - 128) * 1.45 + 132);
+      let t = v / 255;
+      if (S.treat === "halftone") {
+        const bx = ((p % w) / cell | 0) & 3, by = ((p / w | 0) / cell | 0) & 3;
+        t = t > (BAYER[by * 4 + bx] + 0.5) / 16 ? 1 : 0;
+      }
+      d[i] = ink[0] + (paper[0] - ink[0]) * t; d[i + 1] = ink[1] + (paper[1] - ink[1]) * t; d[i + 2] = ink[2] + (paper[2] - ink[2]) * t;
+    }
+    x.putImageData(id, 0, 0);
+  }
+  P.tKey = key; P.tCanvas = c; return c;
+}
+/* draw the photo standing on box.bottom, centred on box.cx, box.h tall; returns where it landed */
+function photoRect(W, H, box, img){
+  let h = box.h * S.photoScale, w = h * img.width / img.height;
+  const maxW = (box.maxW || W) * S.photoScale;
+  if (w > maxW) { w = maxW; h = w * img.height / img.width; }
+  const cx = box.cx + S.photoX * W, bottom = box.bottom + S.photoY * H;
+  return { x: cx - w / 2, y: bottom - h, w, h, cx };
+}
+function drawPhoto(W, H, box){
+  const img = treatedPhoto(); if (!img) return null;
+  const { x, y, w, h, cx } = photoRect(W, H, box, img);
+  ctx.save();
+  ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = "high";
+  if (S.flip) { ctx.translate(cx * 2, 0); ctx.scale(-1, 1); }
+  ctx.drawImage(img, x, y, w, h);
+  ctx.restore();
+  return { x, y, w, h };
+}
+function starPath(x, y, r, rot){
+  ctx.beginPath();
+  for (let i = 0; i < 10; i++) {
+    const rr = i % 2 ? r * 0.45 : r, a = rot - Math.PI / 2 + i * Math.PI / 5;
+    ctx.lineTo(x + rr * Math.cos(a), y + rr * Math.sin(a));
+  }
+  ctx.closePath();
+}
+function capHeight(fam, w){ ctx.font = fontStr(fam, w, 100, false); return (ctx.measureText("H").actualBoundingBoxAscent || 72) / 100; }
+/* small caption + footer, in the caption font */
+function smallText(lines, x, y, maxW, size, align, color){
+  const cf = CAPS[S.cap]; ctx.fillStyle = color; ctx.textAlign = align;
+  for (const [t, k] of lines) {
+    if (!t) continue;
+    ctx.font = fontStr(S.cap, cf.w, size * k, true);
+    for (const l of wrap(t, maxW)) { y += size * k * 1.15; ctx.fillText(l, x, y); }
+    y += size * 0.35;
+  }
+  return y;
+}
+
+/* ---------- STAGE: flat color, stars, letters in dots, cut-out photo (concert programme) ---------- */
+function renderStage(W, H, u, m){
+  const hf = HEADS[S.head], side = W * m.side, top = H * m.top, bottomPad = H * m.bottom;
+  const land = W > H;
+  /* headline layout first, so the stars can keep clear of it */
+  const lines = headLines();
+  const gapK = 0.08, maxLen = lines.length ? Math.max(...lines.map(l => [...l].length)) : 1;
+  const regionW = W * (land ? 0.5 : 0.6) - side;
+  let d = regionW / (maxLen * (1 + gapK) - gapK);
+  d = Math.min(d, (H * 0.5) / (Math.max(1, lines.length) * (1 + gapK)), u * 0.15);
+  const step = d * (1 + gapK);
+  const blockTop = H - bottomPad - lines.length * step;
+  /* stars */
+  const r = rng(11); ctx.fillStyle = S.cc;
+  const pts = [[0.87, 0.10], [0.56, 0.24], [0.17, 0.37], [0.42, 0.45], [0.17, 0.58], [0.30, 0.71], [0.92, 0.80], [0.70, 0.06], [0.08, 0.50]];
+  pts.forEach(([sx, sy]) => {
+    const x = sx * W, y = top * 0.5 + sy * (H - top * 0.5), rad = u * (0.03 + r() * 0.012), rot = r() * 0.8;
+    if (lines.length && y + rad > blockTop - u * 0.03 && x - rad < side + regionW) return;
+    if (y - rad < top + u * 0.16 && x - rad < W * 0.5 && (S.caption.trim() || S.footer.trim())) return;
+    starPath(x, y, rad, rot); ctx.fill();
+  });
+  /* photo, standing at the bottom right */
+  drawPhoto(W, H, { cx: W * (land ? 0.7 : 0.67), bottom: H, h: H * 0.8, maxW: W * (land ? 0.5 : 0.72) });
+  /* headline: one letter per dot, bottom left */
+  if (lines.length) {
+    let cy = H - bottomPad - (lines.length - 1) * step - d / 2;
+    ctx.font = fontStr(S.head, hf.w, d * 0.6, false); ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    lines.forEach(l => {
+      const ch = [...l], rowW = ch.length * step - d * gapK;
+      const x0 = S.align === "right" ? side + regionW - rowW : S.align === "center" ? side + (regionW - rowW) / 2 : side;
+      ch.forEach((c, i) => {
+        if (c === " ") return;
+        const cx = x0 + i * step + d / 2;
+        ctx.fillStyle = S.cc; ctx.beginPath(); ctx.arc(cx, cy, d / 2, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = S.fg; ctx.fillText(c, cx, cy + d * 0.03);
+      });
+      cy += step;
+    });
+    ctx.textBaseline = "alphabetic";
+  }
+  smallText([[S.caption.trim(), 1], [S.style === "stage" && !S.autoSub ? S.sub.trim() : "", 0.7], [S.footer.trim(), 0.6]], side, top, W * 0.46, u * 0.03, "left", S.cc);
+}
+
+/* ---------- MAGAZINE: arched condensed type around a cut-out head (magazine cover) ---------- */
+function arcText(text, cx, cy, R, size, up, tr){
+  const hf = HEADS[S.head]; ctx.font = fontStr(S.head, hf.w, size, false);
+  const ch = [...text], ws = ch.map(c => ctx.measureText(c).width);
+  const total = ws.reduce((a, b) => a + b, 0) + tr * (ch.length - 1);
+  let ang = up ? -Math.PI / 2 - total / (2 * R) : Math.PI / 2 + total / (2 * R);
+  const dir = up ? 1 : -1; ctx.textAlign = "center";
+  ch.forEach((c, i) => {
+    const a = ang + dir * (ws[i] / 2) / R;
+    ctx.save(); ctx.translate(cx + R * Math.cos(a), cy + R * Math.sin(a)); ctx.rotate(up ? a + Math.PI / 2 : a - Math.PI / 2);
+    ctx.fillText(c, 0, 0); ctx.restore();
+    ang += dir * (ws[i] + tr) / R;
+  });
+  return total;
+}
+function arcSize(text, maxW, maxCap){
+  const hf = HEADS[S.head]; ctx.font = fontStr(S.head, hf.w, 100, false);
+  const w = trackedWidth(text, S.track * 100) || 1;
+  return Math.min(100 * maxW / w, maxCap / capHeight(S.head, hf.w));
+}
+function renderMagazine(W, H, u, m){
+  const hf = HEADS[S.head], cf = CAPS[S.cap];
+  const side = W * m.side, top = H * m.top, bottomPad = H * m.bottom, availW = W - side * 2;
+  const lines = headLines(); const capK = capHeight(S.head, hf.w);
+  ctx.fillStyle = S.fg;
+  /* masthead: the caption, big and italic, across the top */
+  let y = top;
+  const cap = S.caption.trim();
+  if (cap) {
+    let size = u * 0.075; ctx.font = fontStr(S.cap, cf.w, size, true);
+    const w = ctx.measureText(cap).width; if (w > availW) size *= availW / w;
+    ctx.font = fontStr(S.cap, cf.w, size, true); ctx.textAlign = "center";
+    y += size * 0.85; ctx.fillText(cap, W / 2, y); y += size * 0.35;
+  }
+  const footer = S.footer.trim();
+  const bottomY = H - bottomPad - (footer ? u * 0.05 : 0);
+  if (footer) { ctx.font = fontStr(S.cap, cf.w, u * 0.024, true); ctx.textAlign = "right"; ctx.fillStyle = S.cc; ctx.fillText(footer, W - side, H - bottomPad); ctx.fillStyle = S.fg; }
+  if (!lines.length) { drawPhoto(W, H, { cx: W / 2, bottom: bottomY, h: (bottomY - y) * 0.8, maxW: availW }); return; }
+  const R = W * 0.78;
+  const first = lines[0], last = lines.length > 2 ? lines[lines.length - 1] : null;
+  const middle = lines.slice(1, last ? -1 : undefined);
+  /* top arch */
+  const topSize = arcSize(first, availW * 0.95, H * 0.12);
+  const topApex = y + topSize * capK + u * 0.02;
+  const topTotal = arcText(first, W / 2, topApex + R, R, topSize, true, S.track * topSize);
+  const topDrop = R * (1 - Math.cos(topTotal / (2 * R)));
+  /* bottom smile */
+  let botTop = bottomY;
+  if (last) {
+    const bs = arcSize(last, availW * 0.95, H * 0.12);
+    const bTotal = arcText(last, W / 2, bottomY - R, R, bs, false, S.track * bs);
+    const rise = R * (1 - Math.cos(bTotal / (2 * R)));
+    botTop = bottomY - rise - bs * capK - u * 0.02;
+  }
+  /* middle: photo, then the middle lines stacked and fitted */
+  const y1 = topApex + topDrop * 0.55 + u * 0.02, y2 = botTop;
+  const midLines = middle.length;
+  const photoH = (y2 - y1) * (midLines ? 0.55 : 0.95);
+  const ph = drawPhoto(W, H, { cx: W / 2, bottom: y1 + photoH, h: photoH, maxW: availW * 0.7 });
+  if (midLines) {
+    let yy = y1 + (P.orig ? photoH + u * 0.03 : 0);
+    const availH = y2 - yy - u * 0.02;
+    ctx.font = fontStr(S.head, hf.w, 100, false);
+    let sizes = middle.map(l => 100 * availW / (trackedWidth(l, S.track * 100) || 1));
+    const total = sizes.reduce((a, s) => a + s * capK, 0) + u * 0.025 * (midLines - 1);
+    const k = total > availH ? availH / total : 1;
+    sizes = sizes.map(s => s * k);
+    const used = sizes.reduce((a, s) => a + s * capK, 0) + u * 0.025 * k * (midLines - 1);
+    yy += Math.max(0, (availH - used) / 2);
+    ctx.fillStyle = S.fg;
+    middle.forEach((l, i) => { ctx.font = fontStr(S.head, hf.w, sizes[i], false); yy += sizes[i] * capK; drawTracked(l, W / 2, yy, S.track * sizes[i], "center"); yy += u * 0.025 * k; });
+  }
+}
+
+/* ---------- PORTRAIT: rings of type behind a halftone cut-out, side column with years + bio ---------- */
+function ringText(text, cx, cy, R, size){
+  const hf = HEADS[S.head]; ctx.font = fontStr(S.head, hf.w, size, false);
+  const unit = text + " • ";
+  const circ = 2 * Math.PI * R;
+  let full = unit; while (ctx.measureText(full + unit).width < circ) full += unit;
+  const ch = [...full], ws = ch.map(c => ctx.measureText(c).width);
+  const tr = (circ - ws.reduce((a, b) => a + b, 0)) / ch.length;
+  let ang = -Math.PI / 2; ctx.textAlign = "center";
+  ch.forEach((c, i) => {
+    const a = ang + (ws[i] / 2) / R;
+    ctx.save(); ctx.translate(cx + R * Math.cos(a), cy + R * Math.sin(a)); ctx.rotate(a + Math.PI / 2); ctx.fillText(c, 0, 0); ctx.restore();
+    ang += (ws[i] + tr) / R;
+  });
+}
+function renderPortrait(W, H, u, m){
+  const hf = HEADS[S.head];
+  const side = W * m.side, top = H * m.top, bottomPad = H * m.bottom;
+  const land = W > H;
+  const colW = W * (land ? 0.16 : 0.15), colX = W - side - colW;
+  const cx = (side + colX) / 2;
+  const R1 = Math.min((colX - side) / 2 / 1.2, H * 0.34);
+  const cy = Math.max(top + R1 * 1.05, H * (land ? 0.45 : 0.38));
+  const ring = headLines().join(" • ");
+  if (ring) {
+    ctx.fillStyle = S.fg;
+    [[1, 0.2], [0.74, 0.16], [0.5, 0.12]].forEach(([k, s]) => ringText(ring, cx, cy, R1 * k, R1 * s));
+  }
+  drawPhoto(W, H, { cx, bottom: H, h: H * (land ? 0.82 : 0.66), maxW: (colX - side) * 0.9 });
+  /* side column: small framed photo, years, rotated bio */
+  let y = top;
+  const img = treatedPhoto();
+  if (img) {
+    const sq = colW; ctx.save(); ctx.beginPath(); ctx.rect(colX, y, sq, sq); ctx.clip();
+    ctx.fillStyle = S.bg; ctx.fillRect(colX, y, sq, sq);
+    const k = Math.max(sq / img.width, sq / img.height) * 1.0, w = img.width * k, h = img.height * k;
+    ctx.drawImage(img, colX + (sq - w) / 2, y + sq - h, w, h); ctx.restore();
+    ctx.strokeStyle = S.cc; ctx.lineWidth = Math.max(2, u * 0.003); ctx.strokeRect(colX, y, sq, sq);
+    y += sq + u * 0.03;
+  }
+  const yrs = S.side.split("\n").map(t => t.trim()).filter(Boolean);
+  if (yrs.length) {
+    ctx.font = fontStr(S.head, hf.w, 100, false);
+    const size = Math.min(...yrs.map(t => 100 * colW / (ctx.measureText(t).width || 1)), u * 0.09);
+    ctx.font = fontStr(S.head, hf.w, size, false); ctx.fillStyle = S.cc; ctx.textAlign = "left";
+    const capK = capHeight(S.head, hf.w);
+    yrs.forEach(t => { y += size * capK * 1.25; ctx.font = fontStr(S.head, hf.w, size, false); ctx.fillText(t, colX, y); });
+    y += u * 0.04;
+  }
+  const bio = S.caption.trim();
+  if (bio) {
+    const size = u * 0.022, L = H - bottomPad - y;
+    ctx.save(); ctx.translate(W - side, y); ctx.rotate(Math.PI / 2);
+    ctx.font = `500 ${size}px "Inter", sans-serif`; ctx.fillStyle = S.cc; ctx.textAlign = "left";
+    const ls = wrap(bio, L); const maxLines = Math.max(1, Math.floor(colW / (size * 1.25)));
+    ls.slice(0, maxLines).forEach((l, i) => ctx.fillText(l, 0, size * 0.95 + i * size * 1.25));
+    ctx.restore();
+  }
+  const footer = S.footer.trim();
+  if (footer) { const cf = CAPS[S.cap]; ctx.font = fontStr(S.cap, cf.w, u * 0.022, true); ctx.fillStyle = S.cc; ctx.textAlign = "left"; ctx.fillText(footer, side, top * 0.6 + u * 0.022); }
+}
+
+/* ---------- shared helpers for the newer styles ---------- */
+function rgbCss(c, a){ return a === undefined ? `rgb(${c[0]},${c[1]},${c[2]})` : `rgba(${c[0]},${c[1]},${c[2]},${a})`; }
+function fitSize(text, fam, w, maxW, maxCap){
+  ctx.font = fontStr(fam, w, 100, false);
+  const tw = trackedWidth(text, S.track * 100) || 1;
+  return Math.min(100 * maxW / tw, maxCap / capHeight(fam, w));
+}
+/* the photo as a flat colour shape (uses the cut-out's outline) */
+function silhouette(src, color){
+  const c = newCanvas(src.width, src.height), x = c.getContext("2d");
+  x.drawImage(src, 0, 0); x.globalCompositeOperation = "source-in"; x.fillStyle = color; x.fillRect(0, 0, c.width, c.height);
+  return c;
+}
+/* real halftone: one dot per cell, bigger where the photo is darker */
+function halftoneDots(src, color, cell, gamma){
+  const w = src.width, h = src.height, c = newCanvas(w, h), x = c.getContext("2d");
+  const d = src.getContext("2d").getImageData(0, 0, w, h).data;
+  x.fillStyle = color;
+  for (let yy = cell / 2; yy < h; yy += cell) {
+    for (let xx = (Math.round(yy / cell) % 2 ? cell : cell / 2); xx < w; xx += cell) {
+      const i = ((yy | 0) * w + (xx | 0)) * 4; const a = d[i + 3] / 255; if (a < 0.1) continue;
+      const lum = (0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2]) / 255;
+      const dark = Math.pow(Math.max(0, Math.min(1, (1 - lum - 0.12) * 1.35)), gamma || 1.2) * a;
+      if (dark < 0.04) continue;
+      x.beginPath(); x.arc(xx, yy, cell * 0.68 * Math.sqrt(dark), 0, Math.PI * 2); x.fill();
+    }
+  }
+  return c;
+}
+function rawPhoto(){ return P.cut || P.orig; }
+
+/* ---------- SHOW CARD: neon stock, stacked wood-type lines, boxed info (swap-meet show cards) ---------- */
+function renderShowcard(W, H, u, m){
+  const hf = HEADS[S.head], side = W * m.side, top = H * m.top, availW = W - side * 2;
+  let bottom = H - H * m.bottom;
+  const lines = headLines();
+  const footer = S.footer.trim(), cap = S.caption.trim();
+  if (footer) {
+    const fsz = fitSize(footer, "Alfa Slab One", 400, availW, u * 0.028);
+    ctx.font = fontStr("Alfa Slab One", 400, fsz, false); ctx.fillStyle = S.fg; ctx.textAlign = "center";
+    ctx.fillText(footer, W / 2, bottom); bottom -= fsz * capHeight("Alfa Slab One", 400) + u * 0.04;
+  }
+  if (cap) {
+    const pad = u * 0.035, lw = Math.max(4, u * 0.008), capK = capHeight(S.head, hf.w);
+    let sz = u * 0.085, ls;
+    for (;;) { ctx.font = fontStr(S.head, hf.w, sz, false); ls = wrap(cap.toUpperCase(), availW - pad * 2); if (ls.length <= 2 || sz < u * 0.03) break; sz *= 0.9; }
+    const lh = sz * capK * 1.35, bh = ls.length * lh - sz * capK * 0.35 + pad * 2;
+    ctx.strokeStyle = S.fg; ctx.lineWidth = lw; ctx.strokeRect(side + lw / 2, bottom - bh, availW - lw, bh);
+    ctx.textAlign = "center"; let yy = bottom - bh + pad;
+    ls.forEach((l, i) => { yy += sz * capK; ctx.fillStyle = i === 0 ? S.cc : S.fg; ctx.font = fontStr(S.head, hf.w, sz, false); ctx.fillText(l, W / 2, yy); yy += lh - sz * capK; });
+    bottom -= bh + u * 0.035;
+  }
+  if (!lines.length) return;
+  /* the photo, if any, sits small above the box in mono */
+  const availH = bottom - top;
+  const fams = lines.map((_, i) => i === 0 ? ["Alfa Slab One", 400] : [S.head, hf.w]);
+  let sizes = lines.map((l, i) => fitSize(l, fams[i][0], fams[i][1], availW, availH * (i === 0 ? 0.12 : 0.22)));
+  const caps = sizes.map((sz, i) => sz * capHeight(fams[i][0], fams[i][1]));
+  const minGap = u * 0.022;
+  let total = caps.reduce((a, b) => a + b, 0) + minGap * (lines.length - 1);
+  const k = total > availH ? availH / total : 1;
+  sizes = sizes.map(x => x * k); const capsK = caps.map(x => x * k);
+  total = capsK.reduce((a, b) => a + b, 0);
+  const gap = lines.length > 1 ? Math.min(u * 0.05, Math.max(minGap * k, (availH - total) / (lines.length - 1))) : 0;
+  let yy = top + Math.max(0, (availH - total - gap * (lines.length - 1)) / 2);
+  lines.forEach((l, i) => {
+    ctx.font = fontStr(fams[i][0], fams[i][1], sizes[i], false); ctx.fillStyle = i === 0 ? S.cc : S.fg;
+    yy += capsK[i]; drawTracked(l, W / 2, yy, S.track * sizes[i], "center"); yy += gap;
+  });
+}
+
+/* ---------- PSYCHEDELIC: framed card, fat letters fanned around the head (60s pin-up card) ---------- */
+function renderPsych(W, H, u, m){
+  const hf = HEADS[S.head], inset = u * 0.045;
+  ctx.fillStyle = S.cc; ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = S.bg; ctx.fillRect(inset, inset, W - inset * 2, H - inset * 2);
+  ctx.save(); ctx.beginPath(); ctx.rect(inset, inset, W - inset * 2, H - inset * 2); ctx.clip();
+  const lines = headLines();
+  const cx = W / 2, cy = H * 0.6, R = Math.min(W, H) * 0.3;
+  if (lines.length) {
+    const text = lines.join(" * "), ch = [...text];
+    const sweep = Math.PI * 1.45, stretch = 1.45;
+    ctx.font = fontStr(S.head, hf.w, 100, false);
+    const w100 = ch.map(c => c === "*" ? 70 : c === " " ? 18 : ctx.measureText(c).width);
+    const sum100 = w100.reduce((a, b) => a + b, 0);
+    const capK = capHeight(S.head, hf.w);
+    const room = Math.min(cy - inset - R, cx - inset - R) * 0.96;
+    const sz = Math.min(100 * R * sweep * 0.98 / sum100, room / (capK * stretch));
+    const ws = w100.map(x => x * sz / 100), used = ws.reduce((a, b) => a + b, 0);
+    const tr = ch.length > 1 ? (R * sweep - used) / (ch.length - 1) : 0;
+    let ang = -Math.PI / 2 - sweep / 2;
+    ctx.font = fontStr(S.head, hf.w, sz, false); ctx.textAlign = "center";
+    ch.forEach((c, i) => {
+      const a = ang + (ws[i] / 2) / R;
+      ctx.save(); ctx.translate(cx + R * Math.cos(a), cy + R * Math.sin(a)); ctx.rotate(a + Math.PI / 2);
+      if (c === "*") { ctx.fillStyle = S.cc; starPath(0, -sz * capK * stretch * 0.55, sz * 0.42, 0); ctx.fill(); }
+      else if (c !== " ") { ctx.scale(1, stretch); ctx.fillStyle = S.fg; ctx.fillText(c, 0, 0); }
+      ctx.restore();
+      ang += (ws[i] + tr) / R;
+    });
+  }
+  drawPhoto(W, H, { cx, bottom: H - inset, h: H * 0.6, maxW: W * 0.8 });
+  ctx.restore();
+  const footer = S.footer.trim();
+  if (footer) { const cf = CAPS[S.cap]; ctx.font = fontStr(S.cap, cf.w, inset * 0.55, true); ctx.fillStyle = S.bg; ctx.textAlign = "center"; ctx.fillText(footer, W / 2, H - inset * 0.3); }
+}
+
+/* ---------- SUNBURST: weathered red, sun rays, hand-cut letters, cut-out bottom right (reggae LP) ---------- */
+function renderSunburst(W, H, u, m){
+  const hf = HEADS[S.head], side = W * m.side, top = H * m.top, bottomPad = H * m.bottom, availW = W - side * 2;
+  const r = rng(29);
+  /* worn edges */
+  ctx.fillStyle = S.fg;
+  for (let i = 0; i < 5200; i++) {
+    const x = r() * W, y = r() * H, edge = Math.min(x, y, W - x, H - y) / u;
+    if (r() > Math.pow(Math.max(0, 1 - edge / 0.16), 2.2)) continue;
+    ctx.globalAlpha = 0.35 + r() * 0.6; ctx.beginPath(); ctx.arc(x, y, u * (0.002 + r() * 0.006), 0, Math.PI * 2); ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+  /* sun rays */
+  const ox = W * 0.8, oy = H * 0.2;
+  ctx.strokeStyle = S.fg; ctx.lineCap = "round";
+  for (let i = 0; i < 26; i++) {
+    const a = -Math.PI * 0.95 + i * (Math.PI * 1.15 / 25), r1 = u * (0.12 + r() * 0.04), r2 = u * (0.26 + r() * 0.12);
+    ctx.lineWidth = u * (0.002 + r() * 0.003);
+    ctx.beginPath(); ctx.moveTo(ox + Math.cos(a) * r1, oy + Math.sin(a) * r1); ctx.lineTo(ox + Math.cos(a) * r2, oy + Math.sin(a) * r2); ctx.stroke();
+  }
+  /* photo bottom right, under the type */
+  drawPhoto(W, H, { cx: W * 0.66, bottom: H, h: H * 0.56, maxW: W * 0.62 });
+  let y = top;
+  const cap = S.caption.trim();
+  if (cap) {
+    const sz = fitSize(cap.toUpperCase(), S.head, hf.w, availW * 0.8, u * 0.045);
+    const ck = capHeight(S.head, hf.w);
+    ctx.font = fontStr(S.head, hf.w, sz, false); ctx.fillStyle = S.cc; ctx.textAlign = "left";
+    y += sz * ck; drawTracked(cap.toUpperCase(), side, y, S.track * sz, "left"); y += u * 0.03;
+  }
+  const lines = headLines();
+  if (lines.length) {
+    const capK = capHeight(S.head, hf.w), availH = H * 0.6 - y;
+    let sizes = lines.map((l, i) => fitSize(l, S.head, hf.w, availW * (i === 0 ? 0.95 : 0.7), H * 0.17));
+    const gap = u * 0.015, total = sizes.reduce((a, b) => a + b * capK, 0) + gap * (lines.length - 1);
+    const k = total > availH ? availH / total : 1;
+    ctx.fillStyle = S.fg;
+    lines.forEach((l, i) => {
+      const sz = sizes[i] * k; ctx.font = fontStr(S.head, hf.w, sz, false);
+      y += sz * capK; ctx.save(); ctx.translate(side, y); ctx.rotate((i % 2 ? 0.012 : -0.01));
+      drawTracked(l, 0, 0, S.track * sz, "left"); ctx.restore(); y += gap * k;
+    });
+  }
+  const sub = !S.autoSub ? S.sub.trim() : "", footer = S.footer.trim();
+  let fy = H - bottomPad;
+  [[footer, 0.032], [sub, 0.05]].forEach(([t, k]) => {
+    if (!t) return;
+    ctx.font = fontStr(S.head, hf.w, u * k, false); ctx.fillStyle = S.cc; ctx.textAlign = "left";
+    const ls = wrap(t, W * 0.36);
+    for (let i = ls.length - 1; i >= 0; i--) { ctx.fillText(ls[i], side, fy); fy -= u * k * 1.05; }
+    fy -= u * 0.015;
+  });
+}
+
+/* ---------- GIG POSTER: cream sheet, two-colour header, colour chips, misregistered halftone portrait ---------- */
+function renderGig(W, H, u, m){
+  const hf = HEADS[S.head], side = W * m.side, top = H * m.top * 0.7, bottomPad = H * m.bottom * 0.6, availW = W - side * 2;
+  const dark = mixRGB(hexRGB(S.fg), [0, 0, 0], 0.72), darkCss = rgbCss(dark);
+  let y = top;
+  const cap = S.caption.trim();
+  if (cap) { const sz = u * 0.026; ctx.font = `700 ${sz}px "Inter", sans-serif`; ctx.fillStyle = darkCss; ctx.textAlign = "left"; const l = wrap(cap, availW * 0.8)[0]; y += sz; ctx.fillText(l, side, y); y += u * 0.03; }
+  const lines = headLines(), capK = capHeight(S.head, hf.w);
+  const left = lines.slice(0, Math.min(2, lines.length)), right = lines.slice(2);
+  const leftW = right.length ? availW * 0.56 : availW;
+  const lsz = left.length ? Math.min(...left.map(l => fitSize(l, S.head, hf.w, leftW, H * 0.075))) : 0;
+  const leftH = left.length ? left.length * lsz * capK * 1.18 : 0;
+  ctx.textAlign = "left";
+  left.forEach((l, i) => { ctx.font = fontStr(S.head, hf.w, lsz, false); ctx.fillStyle = S.fg; drawTracked(l, side, y + lsz * capK * (1 + i * 1.18), S.track * lsz, "left"); });
+  if (right.length) {
+    const rw = availW - leftW - u * 0.03;
+    const rsz = Math.min(...right.map(l => fitSize(l, S.head, hf.w, rw, leftH / right.length / 1.25)));
+    let ry = y + leftH - (right.length - 1) * rsz * capK * 1.25;
+    right.forEach(l => { ctx.font = fontStr(S.head, hf.w, rsz, false); ctx.fillStyle = S.cc; drawTracked(l, side + leftW + u * 0.03, ry, S.track * rsz, "left"); ry += rsz * capK * 1.25; });
+  }
+  y += leftH + u * 0.025;
+  ctx.fillStyle = darkCss; ctx.fillRect(side, y, availW, Math.max(3, u * 0.006)); y += u * 0.03;
+  const chip = u * 0.045;
+  [S.cc, S.fg, darkCss].forEach((c, i) => { ctx.fillStyle = c; ctx.fillRect(side + i * chip * 1.18, y, chip, chip); });
+  const info = S.footer.trim();
+  if (info) {
+    const sz = Math.min(u * 0.038, fitSize(info, "Inter", 500, availW - chip * 3.8, u * 0.03));
+    ctx.font = `500 ${sz}px "Inter", sans-serif`; ctx.fillStyle = darkCss; ctx.textAlign = "left"; ctx.fillText(info, side + chip * 3.8, y + chip * 0.78);
+  }
+  y += chip + u * 0.035;
+  /* the portrait panel */
+  const px = side, pw = availW, py = y, ph = H - bottomPad - y;
+  if (ph < u * 0.1) return;
+  ctx.fillStyle = S.cc; ctx.fillRect(px, py, pw, ph);
+  const src = rawPhoto();
+  if (src) {
+    ctx.save(); ctx.beginPath(); ctx.rect(px, py, pw, ph); ctx.clip();
+    const rc = photoRect(W, H, { cx: px + pw / 2, bottom: py + ph, h: ph * 0.97, maxW: pw * 0.92 }, src);
+    const cell = Math.max(3, Math.round(src.width / 110));
+    const draw = (img, dx, dy, alpha) => { ctx.save(); ctx.globalAlpha = alpha; if (S.flip) { ctx.translate(rc.cx * 2, 0); ctx.scale(-1, 1); } ctx.drawImage(img, rc.x + (S.flip ? -dx : dx), rc.y + dy, rc.w, rc.h); ctx.restore(); };
+    draw(silhouette(src, S.bg), u * 0.06, -u * 0.035, 0.85);
+    draw(silhouette(src, S.fg), u * 0.03, -u * 0.018, 0.55);
+    draw(silhouette(src, S.fg), 0, 0, 1);
+    draw(halftoneDots(src, darkCss, cell, 1.15), 0, 0, 1);
+    ctx.restore();
+  }
+}
+
+/* ---------- FESTIVAL: bright yellow, big mono portrait, hand-lettered headline arched over the head ---------- */
+function renderFestival(W, H, u, m){
+  const hf = HEADS[S.head], side = W * m.side, top = H * m.top, bottomPad = H * m.bottom, availW = W - side * 2;
+  const r = rng(53);
+  /* info in two columns at the top */
+  let infoBottom = top;
+  const colW = availW * 0.47, isz = u * 0.04;
+  ctx.font = `700 ${isz}px "Inter", sans-serif`; ctx.fillStyle = S.cc; ctx.textAlign = "left";
+  [[S.caption.trim(), side], [(!S.autoSub ? S.sub.trim() : ""), side + availW - colW]].forEach(([t, x]) => {
+    if (!t) return; let yy = top;
+    wrap(t, colW).slice(0, 3).forEach(l => { yy += isz * 1.1; ctx.fillText(l, x, yy); });
+    infoBottom = Math.max(infoBottom, yy);
+  });
+  /* photo */
+  const ph = drawPhoto(W, H, { cx: W / 2, bottom: H, h: H * 0.6, maxW: W * 0.95 });
+  const photoTop = ph ? Math.max(ph.y, H * 0.3) : H * 0.55;
+  /* arched hand lettering */
+  const lines = headLines();
+  if (lines.length) {
+    const text = lines.join(" "), ch = [...text];
+    const R = W * 0.47, sweep = Math.PI * 1.05, capK = capHeight(S.head, hf.w);
+    ctx.font = fontStr(S.head, hf.w, 100, false);
+    const w100 = ch.map(c => ctx.measureText(c).width), sum = w100.reduce((a, b) => a + b, 0);
+    const apex = photoTop - u * 0.02;
+    const sz = Math.min(100 * R * sweep / sum, Math.max(u * 0.05, (apex - infoBottom - u * 0.03) / capK));
+    const ws = w100.map(x => x * sz / 100), used = ws.reduce((a, b) => a + b, 0);
+    const span = Math.min(used, R * sweep) ;
+    const tr = ch.length > 1 ? Math.max(0, (span - used) / (ch.length - 1)) : 0;
+    let ang = -Math.PI / 2 - (used + tr * (ch.length - 1)) / (2 * R);
+    const cy = apex + R;
+    ctx.fillStyle = S.fg; ctx.textAlign = "center";
+    ch.forEach((c, i) => {
+      const a = ang + (ws[i] / 2) / R, k = 0.92 + r() * 0.16;
+      ctx.save(); ctx.translate(W / 2 + R * Math.cos(a), cy + R * Math.sin(a)); ctx.rotate(a + Math.PI / 2 + (r() - 0.5) * 0.12);
+      ctx.font = fontStr(S.head, hf.w, sz * k, false); ctx.fillText(c, 0, 0); ctx.restore();
+      ang += (ws[i] + tr) / R;
+    });
+  }
+  /* a few hand-drawn zigzags */
+  ctx.strokeStyle = S.fg; ctx.lineWidth = u * 0.007; ctx.lineJoin = "round"; ctx.lineCap = "round";
+  [[side, H * 0.66], [W - side - u * 0.16, H * 0.72], [side + u * 0.02, H * 0.8]].forEach(([x0, y0]) => {
+    ctx.beginPath(); for (let i = 0; i <= 6; i++) ctx.lineTo(x0 + i * u * 0.027, y0 + (i % 2 ? -1 : 1) * u * 0.014 + (r() - 0.5) * u * 0.006); ctx.stroke();
+  });
+  const footer = S.footer.trim();
+  if (footer) { const cf = CAPS[S.cap]; ctx.font = fontStr(S.cap, cf.w, u * 0.022, true); ctx.fillStyle = S.cc; ctx.textAlign = "left"; ctx.fillText(footer, side, H - bottomPad); }
+}
+
+/* ---------- BOOK COVER: one flat colour, small stacked title at the top, a giant monotone head rising from the bottom edge ---------- */
+function renderBook(W, H, u, m){
+  const hf = HEADS[S.head], cf = CAPS[S.cap], side = W * m.side, top = H * m.top, availW = W - side * 2;
+  /* the photo: very large, only the top of the head shows, cropped by the bottom edge */
+  const img = treatedPhoto();
+  if (img) {
+    const w = W * 1.5 * S.photoScale, h = w * img.height / img.width;
+    const x = W / 2 - w / 2 + S.photoX * W, y = H * 0.58 + S.photoY * H;
+    ctx.save(); ctx.imageSmoothingQuality = "high";
+    if (S.flip) { ctx.translate(W, 0); ctx.scale(-1, 1); }
+    ctx.drawImage(img, S.flip ? W - x - w : x, y, w, h); ctx.restore();
+  }
+  /* the title: one size for every line, set by the longest */
+  const lines = headLines(); let y = top;
+  if (lines.length) {
+    const capK = capHeight(S.head, hf.w);
+    const sz = Math.min(...lines.map(l => fitSize(l, S.head, hf.w, availW * 0.82, H * 0.07)));
+    ctx.font = fontStr(S.head, hf.w, sz, false); ctx.fillStyle = S.fg;
+    lines.forEach(l => { y += sz * capK; drawTracked(l, W / 2, y, S.track * sz, "center"); y += sz * capK * 0.14; });
+    y += u * 0.035;
+  }
+  /* imprint: the caption small and italic, the footer smaller below */
+  ctx.textAlign = "center"; ctx.fillStyle = S.cc;
+  const cap = S.caption.trim(), footer = S.footer.trim();
+  if (cap) { const sz = u * 0.034; ctx.font = fontStr(S.cap, cf.w, sz, true); wrap(cap, availW * 0.7).slice(0, 2).forEach(l => { y += sz; ctx.fillText(l, W / 2, y); y += sz * 0.2; }); }
+  if (footer) { const sz = u * 0.018; ctx.font = `600 ${sz}px "Inter", sans-serif`; y += sz * 1.3; ctx.fillText(footer.toUpperCase(), W / 2, y); }
+}
+
+/* ---------- saving the photo on this device (IndexedDB) ---------- */
+const IDB = {
+  db: null,
+  open(){ if (this.db) return Promise.resolve(this.db); return new Promise((res, rej) => { const r = indexedDB.open("type-poster-maker", 1); r.onupgradeneeded = () => r.result.createObjectStore("kv"); r.onsuccess = () => { this.db = r.result; res(this.db); }; r.onerror = () => rej(r.error); }); },
+  async get(k){ const db = await this.open(); return new Promise((res, rej) => { const q = db.transaction("kv").objectStore("kv").get(k); q.onsuccess = () => res(q.result); q.onerror = () => rej(q.error); }); },
+  async set(k, v){ const db = await this.open(); return new Promise((res, rej) => { const t = db.transaction("kv", "readwrite"); t.objectStore("kv").put(v, k); t.oncomplete = res; t.onerror = () => rej(t.error); }); },
+  async del(k){ const db = await this.open(); return new Promise((res) => { const t = db.transaction("kv", "readwrite"); t.objectStore("kv").delete(k); t.oncomplete = res; t.onerror = res; }); }
+};
+const toBlobP = (c, type, q) => new Promise(r => c.toBlob(r, type, q));
+async function savePhoto(){
+  try {
+    if (!P.orig) { await IDB.del("photo"); return; }
+    const rec = { orig: await toBlobP(P.orig, "image/png") };
+    if (P.conf) {
+      const w = P.orig.width, h = P.orig.height, mc = newCanvas(w, h), mx = mc.getContext("2d"), id = mx.createImageData(w, h);
+      for (let p = 0, i = 0; p < P.conf.length; p++, i += 4) { id.data[i] = id.data[i + 1] = id.data[i + 2] = P.conf[p]; id.data[i + 3] = 255; }
+      mx.putImageData(id, 0, 0); rec.conf = await toBlobP(mc, "image/png");
+    }
+    await IDB.set("photo", rec);
+  } catch(e) { /* storage unavailable: the photo just won't be remembered */ }
+}
+async function blobToCanvas(blob){
+  const url = URL.createObjectURL(blob);
+  try {
+    const img = await new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = () => rej(new Error("Couldn't read that image.")); i.src = url; });
+    return img;
+  } finally { setTimeout(() => URL.revokeObjectURL(url), 1000); }
+}
+async function restorePhoto(){
+  try {
+    const rec = await IDB.get("photo"); if (!rec || !rec.orig) return;
+    const img = await blobToCanvas(rec.orig);
+    const c = newCanvas(img.naturalWidth, img.naturalHeight); c.getContext("2d").drawImage(img, 0, 0); P.orig = c;
+    if (rec.conf) {
+      const mi = await blobToCanvas(rec.conf), mc = newCanvas(c.width, c.height), mx = mc.getContext("2d");
+      mx.drawImage(mi, 0, 0, c.width, c.height);
+      const d = mx.getImageData(0, 0, c.width, c.height).data; P.conf = new Uint8ClampedArray(c.width * c.height);
+      for (let p = 0, i = 0; p < P.conf.length; p++, i += 4) P.conf[p] = d[i];
+    }
+    makeCut(); refreshPhotoUI(); setStatus("Your last photo is back."); schedule();
+  } catch(e) {}
+}
+
+/* ---------- upload flow ---------- */
+async function readPhoto(file){
+  const img = await blobToCanvas(file);
+  const max = 1600, k = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight));
+  const c = newCanvas(Math.round(img.naturalWidth * k), Math.round(img.naturalHeight * k));
+  const x = c.getContext("2d"); x.imageSmoothingQuality = "high"; x.drawImage(img, 0, 0, c.width, c.height);
+  return c;
+}
+/* a PNG that already has a transparent background needs no removal */
+function alphaConf(c){
+  const d = c.getContext("2d").getImageData(0, 0, c.width, c.height).data; let clear = 0;
+  for (let i = 3; i < d.length; i += 4) if (d[i] < 200) clear++;
+  if (clear < c.width * c.height * 0.03) return null;
+  const conf = new Uint8ClampedArray(c.width * c.height); for (let p = 0, i = 3; p < conf.length; p++, i += 4) conf[p] = d[i];
+  return conf;
+}
+async function removeBackground(){
+  if (!P.orig || P.busy) return;
+  P.busy = true; $("photoPick").disabled = true;
+  setStatus("Removing the background…", true);
+  try {
+    P.conf = await segment(P.orig);
+    setStatus("Background removed. Use Photo size and position to place it.");
+  } catch(e) {
+    P.conf = null;
+    setStatus("The background couldn't be removed on this device, so the full photo is used. A PNG with a transparent background also works.");
+  } finally { P.busy = false; $("photoPick").disabled = false; }
+  makeCut(); savePhoto(); schedule();
+}
+$("photoPick").addEventListener("click", () => $("photoIn").click());
+$("photoIn").addEventListener("change", async e => {
+  const f = e.target.files && e.target.files[0]; e.target.value = ""; if (!f) return;
+  setStatus("Loading your photo…", true);
+  try { P.orig = await readPhoto(f); }
+  catch(err) { setStatus("That file couldn't be opened. Try a JPG, PNG or HEIC photo."); return; }
+  P.conf = alphaConf(P.orig);
+  if (S.style === "classic") { S.style = "stage"; applyStyle("stage", true); }
+  refreshPhotoUI();
+  if (P.conf) { setStatus("Your PNG already has a transparent background, so it's used as is."); makeCut(); savePhoto(); schedule(); return; }
+  if (S.cutout) await removeBackground(); else { setStatus("Photo added. Turn on Remove background to cut it out."); makeCut(); savePhoto(); schedule(); }
+});
+$("photoClear").addEventListener("click", () => {
+  P.orig = null; P.conf = null; makeCut(); savePhoto(); refreshPhotoUI();
+  setStatus("Photo removed."); schedule();
+});
+function refreshPhotoUI(){
+  $("photoCtl").classList.toggle("disabledBlock", !P.orig);
+  $("photoClear").disabled = !P.orig;
+  $("photoPick").textContent = P.orig ? "Change photo" : "Upload a photo";
+}
+function applyStyle(v, keepText){
+  S.style = v; const st = STYLES[v];
+  if (st) { S.bg = st.bg; S.fg = st.fg; S.cc = st.cc; S.treat = st.treat; S.head = st.head; S.align = st.align; S.upper = st.upper !== false; }
+  else { S.bg = DEFAULT.bg; S.fg = DEFAULT.fg; S.cc = DEFAULT.cc; S.head = DEFAULT.head; S.align = DEFAULT.align; S.upper = true; }
+  syncUI(); change();
+}
+let raf = 0;
+function schedule(){ if (raf) return; raf = requestAnimationFrame(() => { raf = 0; render(); }); }
+
+/* ---------- stage sizing + safe zones ---------- */
+function fitStage(){
+  const [W, H] = dims();
+  const wrapEl = $("stageWrap");
+  const desktop = window.innerWidth >= 900;
+  const maxW = wrapEl.clientWidth;
+  const maxH = desktop ? window.innerHeight - 48 : window.innerHeight * 0.46;
+  let w = maxW, h = w * H / W;
+  if (h > maxH) { h = maxH; w = h * W / H; }
+  $("stage").style.width = w + "px"; $("stage").style.height = h + "px";
+  drawSafe();
+}
+function drawSafe(){
+  const el = $("safe"); el.classList.toggle("on", !!S.safe); el.innerHTML = "";
+  if (!S.safe) return;
+  const [W, H] = dims(); const purpose = sizeInfo(S.size).purpose;
+  const add = (css, label) => { const d = document.createElement("div"); Object.assign(d.style, css); if (label) { const s = document.createElement("span"); s.textContent = label; d.appendChild(s); } el.appendChild(d); };
+  if (purpose === "iphone") {
+    add({ left: "18%", right: "18%", top: "7%", height: "20%", borderRadius: "10px" }, "Lock-screen clock");
+    add({ left: 0, right: 0, bottom: 0, height: "11%" }, "Flashlight / camera");
+  } else if (purpose === "desktop") {
+    add({ left: 0, right: 0, top: 0, height: "3.8%" }, "Menu bar");
+    add({ left: "22%", right: "22%", bottom: "1%", height: "7.5%", borderRadius: "10px" }, "Dock");
+  } else if (S.size === "story") {
+    add({ left: 0, right: 0, top: 0, height: (250 / H * 100) + "%" }, "Top UI");
+    add({ left: 0, right: 0, bottom: 0, height: (340 / H * 100) + "%" }, "Bottom UI");
+  } else {
+    const gridW = H * 3 / 4; const cut = Math.max(0, (W - gridW) / 2) / W * 100;
+    if (cut > 0) {
+      add({ left: 0, top: 0, bottom: 0, width: cut + "%" }, "Grid crop");
+      add({ right: 0, top: 0, bottom: 0, width: cut + "%" });
+    }
+  }
+}
+
+/* ---------- controls ---------- */
+function fillSelect(sel, obj){ sel.innerHTML = Object.keys(obj).map(k => `<option value="${k}" style="font-family:'${k}'">${k}</option>`).join(""); }
+fillSelect($("head"), HEADS); fillSelect($("cap"), CAPS);
+
+function refreshHero(){
+  const lines = headLines(); const sel = $("hero");
+  if (S.hero >= lines.length) S.hero = -1;
+  sel.innerHTML = `<option value="-1">None</option>` + lines.map((l, i) => `<option value="${i}">${i + 1}. ${l.replace(/</g, "&lt;")}</option>`).join("");
+  sel.value = String(S.hero);
+}
+function refreshSub(){ $("sub").disabled = S.autoSub; if (S.autoSub) $("sub").value = subText(); else $("sub").value = S.sub; }
+function setSeg(id, v){ $(id).querySelectorAll("button").forEach(b => b.classList.toggle("on", b.dataset.v === v)); }
+const fmt = { track: v => (v * 1000).toFixed(0), gap: v => v.toFixed(2), heroScale: v => v.toFixed(2) + "×", grainAmt: v => Math.round(v * 100) + "%",
+  photoScale: v => Math.round(v * 100) + "%", photoX: v => (v > 0 ? "+" : "") + Math.round(v * 100), photoY: v => (v > 0 ? "+" : "") + Math.round(v * 100), edge: v => Math.round(v * 100) + "%" };
+function syncUI(){
+  $("lines").value = S.lines; $("upper").checked = S.upper;
+  $("qLabel").value = S.qLabel; $("q").value = S.q;
+  $("pollLabel").value = S.pollLabel; $("pollQ").value = S.pollQ; $("results").checked = S.results;
+  setSeg("sep", S.sep);
+  $("plText").value = S.plText; $("plTitle").value = S.plTitle; $("plLabel").value = S.plLabel;
+  setSeg("plOrder", S.plOrder); $("plNums").checked = S.plNums; $("plMeta").checked = S.plMeta;
+  refreshKind(); renderOpts(); plStatus();
+  $("autoSub").checked = S.autoSub; $("footer").value = S.footer;
+  $("head").value = S.head; $("cap").value = S.cap;
+  $("bg").value = S.bg; $("fg").value = S.fg; $("cc").value = S.cc;
+  ["track", "gap", "heroScale", "grainAmt", "photoScale", "photoX", "photoY", "edge"].forEach(k => { $(k).value = S[k]; $(k + "O").textContent = fmt[k](S[k]); });
+  $("style").querySelectorAll("button").forEach(b => b.classList.toggle("on", b.dataset.v === S.style));
+  setSeg("treat", S.treat); $("cutout").checked = S.cutout; $("flip").checked = S.flip; $("side").value = S.side;
+  $("sideWrap").style.display = S.style === "portrait" ? "" : "none";
+  $("grain").checked = S.grain; $("safeT").checked = S.safe;
+  $("heroScale").disabled = S.layout === "fill";
+  setSeg("layout", S.layout); setSeg("align", S.align);
+  refreshPurpose();
+  refreshHero(); refreshSub();
+}
+function refreshKind(){
+  setSeg("kind", S.kind);
+  $("grpPoster").style.display = S.kind === "poster" ? "" : "none";
+  $("grpQotd").style.display = S.kind === "qotd" ? "" : "none";
+  $("grpPoll").style.display = S.kind === "poll" ? "" : "none";
+  $("grpPlaylist").style.display = S.kind === "playlist" ? "" : "none";
+  $("kindNote").style.display = S.kind !== "poster" && S.style !== "classic" ? "" : "none";
+  $("caption").value = S[captionKey()] || "";
+}
+function renderOpts(){
+  const esc = s => String(s).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
+  $("optList").innerHTML = S.opts.map((o, i) => `
+    <div class="row" style="margin-bottom:8px">
+      <input type="text" data-i="${i}" class="optT" value="${esc(o)}" aria-label="Option ${i + 1}">
+      <input type="number" data-i="${i}" class="optP" min="0" max="100" value="${S.pcts[i]}" aria-label="Option ${i + 1} percent"
+        style="flex:none;width:84px;display:${S.results ? "" : "none"};background:var(--field);color:var(--text);border:1px solid var(--line);border-radius:8px;padding:10px;font:inherit;font-size:16px">
+    </div>`).join("");
+  $("optAdd").disabled = S.opts.length >= 4; $("optDel").disabled = S.opts.length <= 2;
+  $("optAdd").style.opacity = S.opts.length >= 4 ? .4 : 1; $("optDel").style.opacity = S.opts.length <= 2 ? .4 : 1;
+}
+function refreshPurpose(){
+  const p = PURPOSES[S.purpose];
+  if (!p.sizes[S.size]) S.size = p.def;
+  setSeg("purpose", S.purpose);
+  $("size").innerHTML = Object.entries(p.sizes).map(([k, v]) => `<button data-v="${k}"><b>${v[0]}</b>${v[1]}×${v[2]}</button>`).join("");
+  setSeg("size", S.size);
+  const [W, H] = dims();
+  $("exportTitle").textContent = "Export: " + p.label;
+  $("dl").textContent = p.dl;
+  $("sizeNote").textContent = `${sizeInfo(S.size).label} · ${W} × ${H} px PNG`;
+  $("exportNote").textContent = p.note;
+  $("safeLabel").textContent = p.safeLabel;
+  $("modalText").textContent = p.fallback;
+}
+function choosePurpose(v){
+  S.purpose = v; S.chosen = true; S.size = PURPOSES[v].def;
+  refreshPurpose(); fitStage(); change();
+}
+function change(){ persist(); schedule(); }
+
+$("lines").addEventListener("input", e => { S.lines = e.target.value; refreshHero(); change(); });
+$("upper").addEventListener("change", e => { S.upper = e.target.checked; refreshHero(); change(); });
+$("hero").addEventListener("change", e => { S.hero = +e.target.value; change(); });
+$("caption").addEventListener("input", e => { S[captionKey()] = e.target.value; change(); });
+$("kind").addEventListener("click", e => { const b = e.target.closest("button"); if (!b) return; S.kind = b.dataset.v; refreshKind(); change(); });
+$("qLabel").addEventListener("input", e => { S.qLabel = e.target.value; change(); });
+$("q").addEventListener("input", e => { S.q = e.target.value; change(); });
+$("pollLabel").addEventListener("input", e => { S.pollLabel = e.target.value; change(); });
+$("pollQ").addEventListener("input", e => { S.pollQ = e.target.value; change(); });
+$("optList").addEventListener("input", e => {
+  const i = +e.target.dataset.i;
+  if (e.target.classList.contains("optT")) S.opts[i] = e.target.value;
+  if (e.target.classList.contains("optP")) S.pcts[i] = Math.max(0, Math.min(100, +e.target.value || 0));
+  change();
+});
+$("optAdd").addEventListener("click", () => { if (S.opts.length < 4) { S.opts.push("Option " + String.fromCharCode(65 + S.opts.length)); renderOpts(); change(); } });
+$("optDel").addEventListener("click", () => { if (S.opts.length > 2) { S.opts.pop(); renderOpts(); change(); } });
+$("sep").addEventListener("click", e => { const b = e.target.closest("button"); if (!b) return; S.sep = b.dataset.v; setSeg("sep", S.sep); change(); });
+$("results").addEventListener("change", e => { S.results = e.target.checked; renderOpts(); change(); });
+
+/* playlist */
+function plStatus(){
+  const pl = parsePlaylist(S.plText, S.plOrder), n = pl.tracks.length;
+  let msg = n ? `${n} song${n === 1 ? "" : "s"} found${pl.seconds ? " · " + fmtLength(pl.seconds) : ""}${n > 20 ? " · the first 20 are shown" : ""}.` : "No songs yet. Paste a tracklist above.";
+  if (pl.links && !n) msg = "That's only Spotify or web links, which don't include song names. Copy the song names instead.";
+  $("plStatus").textContent = msg;
+}
+/* takes pasted text: pulls out a playlist name if there is one, keeps the rest as the tracklist */
+function takePlaylist(t){
+  const pl = parsePlaylist(t, S.plOrder);
+  if (!pl.tracks.length) { toast(pl.links ? "Links only. Copy song names instead" : "No songs found in that text"); return false; }
+  let body = String(t).replace(/\r/g, "");
+  if (pl.title) { S.plTitle = pl.title; body = body.split("\n").filter(l => l.trim()).slice(1).join("\n"); }
+  S.plText = body.trim(); S.kind = "playlist";
+  syncUI(); change(); toast(`Poster made: ${pl.tracks.length} songs`);
+  return true;
+}
+$("plText").addEventListener("paste", e => {
+  const t = (e.clipboardData || window.clipboardData).getData("text");
+  if (!t || $("plText").value.trim() && $("plText").selectionStart !== 0) return;   /* normal paste into an existing list */
+  if (!parsePlaylist(t, S.plOrder).tracks.length) return;
+  e.preventDefault(); takePlaylist(t);
+});
+$("plText").addEventListener("input", e => { S.plText = e.target.value; plStatus(); change(); });
+$("plTitle").addEventListener("input", e => { S.plTitle = e.target.value; change(); });
+$("plLabel").addEventListener("input", e => { S.plLabel = e.target.value; change(); });
+$("plOrder").addEventListener("click", e => { const b = e.target.closest("button"); if (!b) return; S.plOrder = b.dataset.v; setSeg("plOrder", S.plOrder); change(); });
+$("plNums").addEventListener("change", e => { S.plNums = e.target.checked; change(); });
+$("plMeta").addEventListener("change", e => { S.plMeta = e.target.checked; change(); });
+$("plPaste").addEventListener("click", async () => {
+  let t = null;
+  try { t = await navigator.clipboard.readText(); } catch(e) { t = null; }
+  if (t === null) { const el = $("plText"); el.focus(); el.select(); toast("Press and hold the tracklist box, then Paste"); return; }
+  if (!t.trim()) { toast("Nothing copied yet"); return; }
+  takePlaylist(t);
+});
+$("sub").addEventListener("input", e => { S.sub = e.target.value; change(); });
+$("autoSub").addEventListener("change", e => { S.autoSub = e.target.checked; if (!S.autoSub && !S.sub) S.sub = subText(); refreshSub(); change(); });
+$("footer").addEventListener("input", e => { S.footer = e.target.value; change(); });
+$("head").addEventListener("change", e => { S.head = e.target.value; refreshSub(); change(); });
+$("cap").addEventListener("change", e => { S.cap = e.target.value; refreshSub(); change(); });
+["bg", "fg", "cc"].forEach(k => $(k).addEventListener("input", e => { S[k] = e.target.value; change(); }));
+["track", "gap", "heroScale", "grainAmt"].forEach(k => $(k).addEventListener("input", e => { S[k] = +e.target.value; $(k + "O").textContent = fmt[k](S[k]); change(); }));
+$("grain").addEventListener("change", e => { S.grain = e.target.checked; change(); });
+["photoScale", "photoX", "photoY"].forEach(k => $(k).addEventListener("input", e => { S[k] = +e.target.value; $(k + "O").textContent = fmt[k](S[k]); change(); }));
+$("edge").addEventListener("input", e => { S.edge = +e.target.value; $("edgeO").textContent = fmt.edge(S.edge); P.needCut = true; change(); });
+$("edge").addEventListener("change", () => savePhoto());
+$("style").addEventListener("click", e => { const b = e.target.closest("button"); if (!b) return; applyStyle(b.dataset.v); });
+$("treat").addEventListener("click", e => { const b = e.target.closest("button"); if (!b) return; S.treat = b.dataset.v; setSeg("treat", S.treat); change(); });
+$("cutout").addEventListener("change", e => { S.cutout = e.target.checked; if (S.cutout && P.orig && !P.conf) removeBackground(); else { makeCut(); } change(); });
+$("flip").addEventListener("change", e => { S.flip = e.target.checked; change(); });
+$("side").addEventListener("input", e => { S.side = e.target.value; change(); });
+$("safeT").addEventListener("change", e => { S.safe = e.target.checked; persist(); drawSafe(); });
+[["layout", v => { S.layout = v; $("heroScale").disabled = v === "fill"; }], ["align", v => S.align = v], ["size", v => { S.size = v; refreshPurpose(); }]].forEach(([id, fn]) => {
+  $(id).addEventListener("click", e => { const b = e.target.closest("button"); if (!b) return; fn(b.dataset.v); setSeg(id, b.dataset.v); if (id === "size") fitStage(); change(); });
+});
+$("purpose").addEventListener("click", e => { const b = e.target.closest("button"); if (!b) return; choosePurpose(b.dataset.v); });
+$("start").addEventListener("click", e => { const b = e.target.closest(".card"); if (!b) return; choosePurpose(b.dataset.v); $("start").classList.remove("show"); });
+$("presets").innerHTML = PRESETS.map((p, i) => `<button class="preset" data-i="${i}" title="${p[0]}" aria-label="${p[0]}" style="background:${p[1]};color:${p[2]}">Aa<small style="color:${p[3]}">a</small></button>`).join("");
+$("presets").addEventListener("click", e => { const b = e.target.closest(".preset"); if (!b) return; const p = PRESETS[+b.dataset.i]; S.bg = p[1]; S.fg = p[2]; S.cc = p[3]; $("bg").value = S.bg; $("fg").value = S.fg; $("cc").value = S.cc; change(); });
+$("swap").addEventListener("click", () => { const b = S.bg; S.bg = S.fg; S.fg = b; S.cc = b; $("bg").value = S.bg; $("fg").value = S.fg; $("cc").value = S.cc; change(); });
+$("reset").addEventListener("click", () => { S = makeState(null, { purpose: S.purpose, size: S.size, chosen: true, kind: S.kind }); P.needCut = true; syncUI(); fitStage(); change(); toast("Reset"); });
+
+/* ---------- export ---------- */
+let downloads = null;
+(async () => { try { if (window.claude && typeof window.claude.use === "function") downloads = await window.claude.use("downloads"); } catch(e) { downloads = null; } })();
+
+function toast(msg){ const t = $("toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove("show"), 1800); }
+function showFallback(blob){
+  const img = $("modalImg"); if (img.src) URL.revokeObjectURL(img.src);
+  img.src = URL.createObjectURL(blob); $("modal").classList.add("show");
+}
+$("modalClose").addEventListener("click", () => $("modal").classList.remove("show"));
+
+$("dl").addEventListener("click", async () => {
+  const btn = $("dl"); btn.disabled = true; btn.textContent = "Rendering…";
+  try {
+    if (document.fonts && document.fonts.ready) await document.fonts.ready;
+    await render();
+    const blob = await new Promise(r => cv.toBlob(r, "image/png"));
+    const [W, H] = dims();
+    const name = `poster-${S.purpose}-${W}x${H}.png`;
+    if (downloads) {
+      try { const res = await downloads.save({ filename: name, data: blob }); toast(res && res.status === "delivered" ? "Sent" : "Saved"); return; }
+      catch(e) {
+        const code = e && e.code;
+        if (code === "declined") { toast("Cancelled"); return; }
+        if (code === "rate_limited") { toast("One moment, then try again"); return; }
+      }
+    }
+    /* outside Claude (e.g. on GitHub Pages): the phone's share sheet, then a normal download */
+    if (!downloads) {
+      const file = new File([blob], name, { type: "image/png" });
+      const touch = matchMedia("(pointer: coarse)").matches;
+      if (touch && navigator.canShare && navigator.canShare({ files: [file] })) {
+        try { await navigator.share({ files: [file] }); toast("Done"); return; }
+        catch(e) { if (e && e.name === "AbortError") { toast("Cancelled"); return; } }
+      } else if (!touch) {
+        const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = name;
+        document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+        toast("Saved"); return;
+      }
+    }
+    showFallback(blob);
+  } finally { btn.disabled = false; btn.textContent = "Download PNG"; }
+});
+
+/* ---------- from TODAY.: headline, caption and footer in one paste ----------
+   TODAY. copies a story as blocks separated by a blank line:
+   headline lines / summary / "via Source • date • TODAY." */
+function parseToday(t){
+  t = String(t || "").replace(/\r/g, "").trim(); if (!t) return null;
+  const blocks = t.split(/\n[ \t]*\n/).map(b => b.trim()).filter(Boolean);
+  if (blocks.length < 2) return null;
+  const one = s => s.replace(/\s*\n\s*/g, " ");
+  return { lines: blocks[0], caption: one(blocks[1]), footer: blocks.length > 2 ? one(blocks.slice(2).join(" ")) : null };
+}
+function applyToday(d){
+  if (!d || !d.lines) return false;
+  S.kind = "poster";
+  S.lines = d.lines; S.caption = d.caption || ""; if (d.footer != null) S.footer = d.footer; S.hero = -1;
+  syncUI(); change(); toast("Filled in from TODAY.");
+  return true;
+}
+$("lines").addEventListener("paste", e => {
+  const t = (e.clipboardData || window.clipboardData).getData("text");
+  const d = parseToday(t); if (!d) return;
+  e.preventDefault(); applyToday(d);
+});
+$("pasteToday").addEventListener("click", async () => {
+  let t = null;
+  try { t = await navigator.clipboard.readText(); } catch(e) { t = null; }
+  if (t === null) { const el = $("lines"); el.focus(); el.select(); toast("Press and hold the Headline box, then Paste"); return; }
+  if (applyToday(parseToday(t))) return;
+  if (t.trim()) { S.lines = t.trim(); S.hero = -1; syncUI(); change(); toast("Headline pasted"); return; }
+  toast("Nothing copied yet. Tap MAKE POSTER in TODAY. first");
+});
+function todayFromUrl(){
+  try {
+    const m = (location.hash || "").match(/[#&]today=([^&]+)/) || (location.search || "").match(/[?&]today=([^&]+)/);
+    if (!m) return;
+    const d = JSON.parse(decodeURIComponent(m[1]));
+    if (d && d.lines) { S.kind = "poster"; S.lines = String(d.lines); S.caption = String(d.caption || ""); if (d.footer) S.footer = String(d.footer); S.hero = -1; persist(); }
+    try { history.replaceState(null, "", location.pathname + location.search.replace(/[?&]today=[^&]+/, "")); } catch(e) {}
+  } catch(e) {}
+}
+/* a playlist sent by link (#playlist=), e.g. from Crate Dial: { title, tracks: [{song, artist}], caption, footer } */
+function playlistFromUrl(){
+  try {
+    const m = (location.hash || "").match(/[#&]playlist=([^&]+)/);
+    if (!m) return;
+    const d = JSON.parse(decodeURIComponent(m[1]));
+    if (d && Array.isArray(d.tracks) && d.tracks.length) {
+      S.kind = "playlist"; S.plOrder = "sa";
+      if (d.title) S.plTitle = String(d.title);
+      S.plText = d.tracks.map(x => String(x.song || "").trim() + (x.artist ? " — " + String(x.artist).trim() : "")).filter(Boolean).join("\n");
+      if (d.caption != null) S.plCaption = String(d.caption);
+      if (d.footer) S.footer = String(d.footer);
+      persist();
+    }
+    try { history.replaceState(null, "", location.pathname + location.search); } catch(e) {}
+  } catch(e) {}
+}
+
+/* ---------- boot ---------- */
+todayFromUrl();
+playlistFromUrl();
+if (!PURPOSES[S.purpose]) S.purpose = "instagram";
+syncUI();
+if (!S.chosen) $("start").classList.add("show");
+window.addEventListener("resize", fitStage);
+refreshPhotoUI();
+fitStage(); render();
+restorePhoto();
+if (document.fonts) { document.fonts.ready.then(schedule); document.fonts.addEventListener && document.fonts.addEventListener("loadingdone", schedule); }
+</script>
+</body>
+</html>
+
+</body></html>
