@@ -85,6 +85,7 @@
   .modal .btn{max-width:240px}
   .seg.wrap{flex-wrap:wrap}
   .seg.wrap button{flex:1 1 30%}
+  .seg.purposeSeg button{flex:1 1 45%}
   .seg.kindSeg button{flex:1 1 45%}
   .start{position:fixed;inset:0;z-index:60;background:rgba(10,10,10,.96);display:none;flex-direction:column;align-items:center;justify-content:center;padding:24px;gap:18px}
   .start.show{display:flex}
@@ -130,10 +131,11 @@
     <details open>
       <summary>Designing for</summary>
       <div class="body">
-        <div class="seg" id="purpose">
+        <div class="seg wrap purposeSeg" id="purpose">
           <button data-v="instagram"><b>Instagram</b>post or story</button>
           <button data-v="iphone"><b>iPhone</b>wallpaper</button>
           <button data-v="desktop"><b>Desktop</b>wallpaper</button>
+          <button data-v="cover"><b>Playlist cover</b>square 1:1</button>
         </div>
         <label class="f">Size</label>
         <div class="seg wrap" id="size"></div>
@@ -340,6 +342,7 @@
     <button class="card" data-v="instagram"><div class="ic"><i style="width:34px;height:42px"></i></div><div><b>Instagram</b><span>Portrait post, square post or story</span></div></button>
     <button class="card" data-v="iphone"><div class="ic"><i style="width:24px;height:48px;border-radius:7px"></i></div><div><b>iPhone wallpaper</b><span>Lock and home screen, sized for your model</span></div></button>
     <button class="card" data-v="desktop"><div class="ic"><i style="width:50px;height:30px"></i></div><div><b>Desktop wallpaper</b><span>Mac, PC, 4K and 5K displays</span></div></button>
+    <button class="card" data-v="cover"><div class="ic"><i style="width:40px;height:40px"></i></div><div><b>Playlist cover</b><span>Square 1:1 for Spotify and Apple Music</span></div></button>
   </div>
 </div>
 
@@ -407,6 +410,17 @@ const PURPOSES = {
       d_qhd: ["1440p", 2560, 1440],
       d_hd:  ["1080p", 1920, 1080]
     }
+  },
+  cover: {
+    label: "Playlist cover", dl: "Download playlist cover", def: "pc_sp", fmt: "jpg",
+    note: "Saved as a JPG under 4 MB, which Spotify needs. In Spotify, open your playlist, tap ⋯ › Edit, then tap the cover to pick this image. In Apple Music, tap ⋯ › Edit, then tap the artwork.",
+    fallback: "Press and hold the image to save it, then pick it as your playlist cover.",
+    safeLabel: "",
+    sizes: {
+      pc_sp: ["Spotify", 1500, 1500],
+      pc_lg: ["Large", 3000, 3000],
+      pc_sm: ["Small", 640, 640]
+    }
   }
 };
 function sizeInfo(key){ for (const p in PURPOSES) if (PURPOSES[p].sizes[key]) return { purpose: p, label: PURPOSES[p].sizes[key][0], W: PURPOSES[p].sizes[key][1], H: PURPOSES[p].sizes[key][2] }; return sizeInfo("portrait"); }
@@ -415,6 +429,7 @@ function margins(){
   const i = sizeInfo(S.size), land = i.W > i.H;
   if (i.purpose === "iphone")  return { top: 0.30, bottom: 0.13, side: 0.08 };
   if (i.purpose === "desktop") return { top: 0.10, bottom: 0.13, side: 0.14 };
+  if (i.purpose === "cover")   return { top: 0.08, bottom: 0.07, side: 0.08 };
   if (S.size === "story")      return { top: 0.14, bottom: 0.19, side: 0.075 };
   return { top: 0.07, bottom: 0.055, side: land ? 0.1 : 0.075 };
 }
@@ -1578,6 +1593,7 @@ function drawSafe(){
   const el = $("safe"); el.classList.toggle("on", !!S.safe); el.innerHTML = "";
   if (!S.safe) return;
   const [W, H] = dims(); const purpose = sizeInfo(S.size).purpose;
+  if (purpose === "cover") return;
   const add = (css, label) => { const d = document.createElement("div"); Object.assign(d.style, css); if (label) { const s = document.createElement("span"); s.textContent = label; d.appendChild(s); } el.appendChild(d); };
   if (purpose === "iphone") {
     add({ left: "18%", right: "18%", top: "7%", height: "20%", borderRadius: "10px" }, "Lock-screen clock");
@@ -1664,6 +1680,7 @@ function refreshPurpose(){
   $("sizeNote").textContent = `${sizeInfo(S.size).label} · ${W} × ${H} px PNG`;
   $("exportNote").textContent = p.note;
   $("safeLabel").textContent = p.safeLabel;
+  $("safeT").closest("label").style.display = p.safeLabel ? "" : "none";
   $("modalText").textContent = p.fallback;
 }
 function choosePurpose(v){
@@ -1771,9 +1788,17 @@ $("dl").addEventListener("click", async () => {
   try {
     if (document.fonts && document.fonts.ready) await document.fonts.ready;
     await render();
-    const blob = await new Promise(r => cv.toBlob(r, "image/png"));
+    const isJpg = PURPOSES[S.purpose].fmt === "jpg";
+    let blob;
+    if (isJpg) {
+      /* JPG, stepping the quality down until it is under 4 MB (Spotify's limit) */
+      for (const q of [0.92, 0.86, 0.8, 0.72, 0.62, 0.5]) {
+        blob = await new Promise(r => cv.toBlob(r, "image/jpeg", q));
+        if (blob && blob.size < 3.9 * 1024 * 1024) break;
+      }
+    } else blob = await new Promise(r => cv.toBlob(r, "image/png"));
     const [W, H] = dims();
-    const name = `poster-${S.purpose}-${W}x${H}.png`;
+    const name = `poster-${S.purpose}-${W}x${H}.${isJpg ? "jpg" : "png"}`;
     if (downloads) {
       try { const res = await downloads.save({ filename: name, data: blob }); toast(res && res.status === "delivered" ? "Sent" : "Saved"); return; }
       catch(e) {
@@ -1784,7 +1809,7 @@ $("dl").addEventListener("click", async () => {
     }
     /* outside Claude (e.g. on GitHub Pages): the phone's share sheet, then a normal download */
     if (!downloads) {
-      const file = new File([blob], name, { type: "image/png" });
+      const file = new File([blob], name, { type: isJpg ? "image/jpeg" : "image/png" });
       const touch = matchMedia("(pointer: coarse)").matches;
       if (touch && navigator.canShare && navigator.canShare({ files: [file] })) {
         try { await navigator.share({ files: [file] }); toast("Done"); return; }
